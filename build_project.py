@@ -28,33 +28,40 @@ import hashlib
 import json
 import re
 import logging
+import argparse
+import subprocess
 
 import build
+from contrib.jsmin import jsmin
+from contrib.cssmin import cssmin
 
-WORKING = False
+globals()['WORKING'] = False
 BUILD_DIR = build.module_dir()
 SCRIPT_DIR = build.module_parent()
 
 logger = logging.getLogger('bluebutton')
-# logger.setLevel(getattr(logging, 'INFO'))
-logger.setLevel(getattr(logging, 'DEBUG'))
+logger.setLevel(getattr(logging, 'INFO'))
 logger_handler = logging.StreamHandler()
 logger_handler.setLevel(logging.DEBUG)
 logger.addHandler(logger_handler)
 
 
 def build_project():
-    logger.debug("Checking for changes to project files.")
-    hashes = build_hashes()
-    # if compare_hashes(hashes):
-    if False:
-        logger.debug("- No changes to files")
+    if not globals()['WORKING']:
+        globals()['WORKING'] = True
+        logger.debug("Checking for changes to project files.")
+        hashes = build_hashes()
+        # if compare_hashes(hashes):
+        if False:
+            logger.debug("- No changes to files")
+        else:
+            write_hashes(hashes)
+            output = inject_scripts()
+            output = inject_styles(output)
+            output = inject_data(output)
+            write_output(output)
     else:
-        write_hashes(hashes)
-        output = inject_scripts()
-        output = inject_styles(output)
-        output = inject_data(output)
-        write_output(output)
+        logger.debug("Currently working, so skipping this build.")
 
 
 def build_hashes():
@@ -138,50 +145,88 @@ def write_hashes(hashes):
 
 
 def inject_scripts(input=None):
-    logger.info("Injecting scripts")
+    logger.info("> Injecting scripts")
     scripts_tag = r'([^\S\n]*){%\s?insert:\s?scripts\s?%}'
     scripts = []
-    script_data = ""
 
-    for dirname, dirnames, filenames in os.walk(BUILD_DIR):
+    for dirname, dirnames, filenames in os.walk(BUILD_DIR + "/js"):
         for filename in filenames:
             if filename.split('.')[-1] == 'js':
                 path = os.path.join(dirname, filename)
                 scripts.append(path)
 
     if not input:
-        logger.info("- Fetching the template.")
+        logger.debug("- Fetching the template.")
         try:
             template_file = open(BUILD_DIR + "/template.html", "r")
             input = template_file.read()
         except IOError:
             raise TemplateError("Template file could not be opened")
 
-    tag = re.search(scripts_tag, input)
-    begin = tag.start()
-    end = tag.end()
-    whitespace = tag.group(1)
+    while re.search(scripts_tag, input, flags=re.IGNORECASE):
+        tag = re.search(scripts_tag, input, flags=re.IGNORECASE)
+        begin, end, whitespace = (tag.start(), tag.end(), tag.group(1))
+        script_data = ""
 
-    for script in scripts:
-        logger.debug("- Adding %s to script data" % (script))
-        useful_name = script.partition(BUILD_DIR)[2].strip("/")
-        file = open(script)
-        data = file.read()
-        script_data += "%s/* %s */ %s" % (whitespace, useful_name, data)
+        for script in scripts:
+            logger.debug("- Adding %s to script data" % (script))
+            useful_name = script.partition(BUILD_DIR)[2].strip("/")
+            data = open(script).read()
+            if not re.search(r'\.min\.', useful_name, flags=re.IGNORECASE):
+                data = jsmin(data)
+            script_data += "%s/* %s */ %s" % (whitespace, useful_name, data)
 
-    script_data = "%s<!-- Injected scripts -->\n%s<script>\n%s</script>" % (whitespace, whitespace, script_data)
-    output = input[:begin] + script_data + input[end:]
-    # output = re.sub(scripts_tag, script_data, input, flags=re.IGNORECASE)
-    return output
+        script_data = "%s<!-- Injected scripts -->\n%s<script>\n%s\n%s</script>" % (whitespace, whitespace, script_data, whitespace)
+        input = input[:begin] + script_data + input[end:]
+
+    return input
 
 
 def inject_styles(input=None):
-    logger.info("Injecting styles")
+    logger.info("> Injecting styles")
+    styles_tag = r'([^\S\n]*){%\s?insert:\s?styles\s?%}'
+    stylesheets = []
+
+    # Run compass to compile any SCSS
+    os.chdir(BUILD_DIR)
+    subprocess.call(['compass', 'compile', '-q'])
+    os.chdir(SCRIPT_DIR)
+
+    for dirname, dirnames, filenames in os.walk(BUILD_DIR + "/stylesheets"):
+        for filename in filenames:
+            if filename.split('.')[-1] == 'css':
+                path = os.path.join(dirname, filename)
+                stylesheets.append(path)
+
+    if not input:
+        logger.debug("- Fetching the template.")
+        try:
+            template_file = open(BUILD_DIR + "/template.html", "r")
+            input = template_file.read()
+        except IOError:
+            raise TemplateError("Template file could not be opened")
+
+    while re.search(styles_tag, input, flags=re.IGNORECASE):
+        tag = re.search(styles_tag, input, flags=re.IGNORECASE)
+        begin, end, whitespace = (tag.start(), tag.end(), tag.group(1))
+        styles_data = ""
+
+        for sheet in stylesheets:
+            logger.debug("- Adding %s to styles data" % (sheet))
+            useful_name = sheet.partition(BUILD_DIR)[2].strip("/")
+            data = open(sheet).read()
+            if not re.search(r'\.min\.', useful_name, flags=re.IGNORECASE):
+                data = cssmin(data)
+            styles_data += "%s/* %s */ %s\n" % (whitespace, useful_name, data)
+
+        styles_data = "%s<!-- Injected styles -->\n%s<style>\n%s\n%s</style>" % (whitespace, whitespace, styles_data, whitespace)
+        input = input[:begin] + styles_data + input[end:]
+
     return input
 
 
 def inject_data(input=None, placeholder=False):
-    logger.info("Injecting data")
+    logger.info("> Injecting data")
     data_tag = r'([^\S\n]*){%\s?insert:\s?data\s?%}'
 
     if not placeholder:
@@ -198,23 +243,27 @@ def inject_data(input=None, placeholder=False):
             placeholder = True
 
     if not input:
-        logger.info("- Fetching the template.")
+        logger.debug("- Fetching the template.")
         try:
             template_file = open(BUILD_DIR + "/template.html", "r")
             input = template_file.read()
         except IOError:
             raise TemplateError("Template file could not be opened")
 
-    if not placeholder:
-        whitespace = re.search(data_tag, input).group(1)
-        data = "%s<!-- Injected patient data -->\n%s<script>%s</script>" % (whitespace, whitespace, data)
-        output = re.sub(data_tag, data, input, flags=re.IGNORECASE)
-        return output
-    else:
-        logger.debug("- Writing placeholder.")
-        placeholder_text = "<script>\n\t// PUT PATIENT DATA (JSON) HERE\n</script>"
-        output = re.sub(data_tag, placeholder_text, input, flags=re.IGNORECASE)
-        return output
+    while re.search(data_tag, input, flags=re.IGNORECASE):
+        tag = re.search(data_tag, input, flags=re.IGNORECASE)
+        begin = tag.start()
+        end = tag.end()
+        whitespace = tag.group(1)
+        if not placeholder:
+            data = "%s<!-- Injected patient data -->\n%s<script>BlueButtonCallback(%s)</script>" % (whitespace, whitespace, data)
+            input = input[:begin] + data + input[end:]
+        else:
+            logger.debug("- Writing placeholder.")
+            placeholder_text = "%s<script>\n%s\t// PUT PATIENT DATA (JSON) HERE\n%s</script>" % (whitespace, whitespace, whitespace)
+            input = input[:begin] + placeholder_text + input[end:]
+
+    return input
 
 
 def write_output(output):
@@ -222,7 +271,7 @@ def write_output(output):
     target_file.write(output)
     target_file.close()
 
-    logger.info("Written successfully to bluebutton.html")
+    logger.info("< Written successfully to bluebutton.html")
 
 
 def md5_for_file(f, block_size=1000000):
@@ -251,4 +300,18 @@ class DataError(Exception):
         return repr(self.value)
 
 if __name__ == '__main__':
-    build_project()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('-w', '--watch', action='store_true')
+    args = parser.parse_args()
+
+    if args.verbose:
+        logger.setLevel(getattr(logging, 'DEBUG'))
+
+    if not args.watch:
+        logger.info("Building the project...")
+        build_project()
+    else:
+        # TODO
+        # print ">>> Monitoring for changes to project files. Press Ctrl-C to stop."
+        print "Watching is not yet implemented"

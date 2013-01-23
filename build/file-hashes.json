@@ -12,12 +12,16 @@
         "filename": "js/03-angular.min.js"
     },
     {
+        "hash": "6dc9fd3d6cde13189e967da56bb455b4",
+        "filename": "js/04-bluebutton.js"
+    },
+    {
         "hash": "9496473067040385831bb6cccbd68627",
         "filename": "stylesheets/ie.css"
     },
     {
-        "hash": "1fd86dce3d28778bd4276c437a84bd04",
-        "filename": "stylesheets/normalize.min.css"
+        "hash": "3f499e09d570ad694fe54abcb50476be",
+        "filename": "stylesheets/normalize.css"
     },
     {
         "hash": "4583ffae7a2f26754f6b3d0f10655e8b",
@@ -28,7 +32,7 @@
         "filename": "stylesheets/screen.css"
     },
     {
-        "hash": "84c687fbe65f375bb15173889ce32a07",
+        "hash": "8f24fbaaf10a4dbcdaf5764f9191ebe4",
         "filename": "template.html"
     },
     {
