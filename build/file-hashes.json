@@ -12,12 +12,8 @@
         "filename": "js/03-angular.min.js"
     },
     {
-        "hash": "6dc9fd3d6cde13189e967da56bb455b4",
-        "filename": "js/04-bluebutton.js"
-    },
-    {
-        "hash": "9496473067040385831bb6cccbd68627",
-        "filename": "stylesheets/ie.css"
+        "hash": "e8c0e5f10cb380789210962fa2e8529a",
+        "filename": "js/10-bluebutton.js"
     },
     {
         "hash": "3f499e09d570ad694fe54abcb50476be",
@@ -32,7 +28,7 @@
         "filename": "stylesheets/screen.css"
     },
     {
-        "hash": "8f24fbaaf10a4dbcdaf5764f9191ebe4",
+        "hash": "1232601e58e6f2156fb10ae267d55ace",
         "filename": "template.html"
     },
     {

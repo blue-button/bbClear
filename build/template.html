@@ -1,27 +1,83 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" ng-app> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" ng-app> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" ng-app> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" ng-app> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Blue Button Health Record</title>
-        <meta name="description" content="">
+        <meta name="description" content="Patient health records in the Blue Button format.">
         <meta name="viewport" content="width=device-width">
-
+        <meta name="author" content="M. Jackson Wilkinson / jackson@jounce.net / @mjacksonw">
         {% insert: styles %}
-
         {% insert: scripts %}
-
     </head>
-    <body ng-app>
+    <body>
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-        <h1>Hello {{'world' + '!'}}</h1>
+        <div id="bio" ng-controller="PatientCtrl">
+            <h1>{{patient.demographics.firstName}} {{patient.demographics.middleName}} {{patient.demographics.lastName}}</h1>
+            <p>{{patient.demographics.age}} year old {{patient.demographics.gender}}</p>
+        </div>
+
+        <h2>Encounters</h2>
+        <ul ng-controller="EncounterListCtrl">
+            <li ng-repeat="encounter in encounters">
+                {{encounter.activity.name}} {{encounter.date.value}}
+            </li>
+        </ul>
+
+        <h2>Allergies</h2>
+        <ul ng-controller="AllergyListCtrl">
+            <li ng-repeat="allergy in allergies">
+                {{allergy.substance.name}}: {{allergy.status.name}}, {{allergy.severity.name}} ({{allergy.reaction.name}})
+            </li>
+        </ul>
+
+        <h2>Medications</h2>
+        <dl ng-controller="MedicationListCtrl">
+            <li ng-repeat="medication in medications">
+                <dt>{{medication.product.name}}</dt>
+                <dd>for {{medication.indication.name}}, since {{medication.date.value}}</dd>
+            </li>
+        </dl>
+
+        <h2>Immunizations</h2>
+        <ul ng-controller="ImmunizationListCtrl">
+            <li ng-repeat="immunization in immunizations">
+                {{immunization.product.name}} - {{immunization.date.value}}
+            </li>
+        </ul>
+
+        <h2>Problems</h2>
+        <ul ng-controller="ProblemListCtrl">
+            <li ng-repeat="problem in problems">
+                {{problem.problem.name}} ({{problem.status.name}}) - {{problem.date.value}}
+            </li>
+        </ul>
+
+        <h2>Procedures</h2>
+        <ul ng-controller="ProcedureListCtrl">
+            <li ng-repeat="procedure in procedures">
+                {{procedure.procedure.name}} ({{procedure.targetSite.name}}) - {{procedure.date.value}}
+            </li>
+        </ul>
+
+        <h2>Vital Signs</h2>
+        <ul ng-controller="VitalSignListCtrl">
+            <li ng-repeat="vitalSign in vitalSigns">
+                {{vitalSign.date.value}}: {{vitalSign.height.value}}{{vitalSign.height.unit}},
+                                          {{vitalSign.weight.value}}{{vitalSign.weight.unit}},
+                                          {{vitalSign.bloodPressure.systolic.value}}/{{vitalSign.bloodPressure.diastolic.value}}
+                                                {{vitalSign.bloodPressure.systolic.unit}}
+            </li>
+        </ul>
+
+
+
+
+        {% insert: data %}
     </body>
-
-    {% insert: data %}
-
 </html>
