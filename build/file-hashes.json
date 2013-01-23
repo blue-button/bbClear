@@ -1,0 +1,38 @@
+[
+    {
+        "hash": "f7314be575aff23ee025af9aea5ca8f0",
+        "filename": "js/01-modernizr-2.6.2.min.js"
+    },
+    {
+        "hash": "e5f0f443252cf2905f18e131fd04fc81",
+        "filename": "js/02-jquery-1.9.0.min.js"
+    },
+    {
+        "hash": "f4671ea99a2d35d5459afa0f86a8174c",
+        "filename": "js/03-angular.min.js"
+    },
+    {
+        "hash": "9496473067040385831bb6cccbd68627",
+        "filename": "stylesheets/ie.css"
+    },
+    {
+        "hash": "1fd86dce3d28778bd4276c437a84bd04",
+        "filename": "stylesheets/normalize.min.css"
+    },
+    {
+        "hash": "4583ffae7a2f26754f6b3d0f10655e8b",
+        "filename": "stylesheets/print.css"
+    },
+    {
+        "hash": "de1aadb63f57e04b27bacedcf225420b",
+        "filename": "stylesheets/screen.css"
+    },
+    {
+        "hash": "84c687fbe65f375bb15173889ce32a07",
+        "filename": "template.html"
+    },
+    {
+        "hash": "b46a6824f0f8ff06e7c3df5899c183a5",
+        "filename": "data.json"
+    }
+]

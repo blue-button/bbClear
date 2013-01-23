@@ -7,7 +7,6 @@
 *.egg
 *.egg-info
 dist
-build
 eggs
 parts
 bin
@@ -17,6 +16,7 @@ develop-eggs
 .installed.cfg
 lib
 lib64
+.sass-cache/
 
 # Installer logs
 pip-log.txt
