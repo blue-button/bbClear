@@ -18,9 +18,10 @@ Notes:
  - It encodes any referenced images as base64 and includes them in the CSS
  - It includes files in order of their filename into 'template.html':
     - {% insert: js %} (any files in build/ ending in .js)
-    - {% insert: css %} (the compiled results of build/sass)
+    - {% insert: css %} (the compiled results of build/sass, in build/stylesheets)
+        - Any 'print.css' file is included with the print media attribute
+        - Any 'ie.css' file is included within an IE conditional comment.
     - {% insert: data %} (any existing build/data.json, or a placeholder if none)
-
 """
 
 import os
@@ -194,7 +195,7 @@ def inject_styles(input=None):
 
     for dirname, dirnames, filenames in os.walk(BUILD_DIR + "/stylesheets"):
         for filename in filenames:
-            if filename.split('.')[-1] == 'css':
+            if filename.split('.')[-1] == 'css' and not re.search(r'(ie|print)\.', filename):
                 path = os.path.join(dirname, filename)
                 stylesheets.append(path)
 
@@ -219,7 +220,23 @@ def inject_styles(input=None):
                 data = cssmin(data)
             styles_data += "%s/* %s */ %s\n" % (whitespace, useful_name, data)
 
-        styles_data = "%s<!-- Injected styles -->\n%s<style>\n%s\n%s</style>" % (whitespace, whitespace, styles_data, whitespace)
+        styles_data = '%s<!-- Injected styles -->\n%s<style media="screen, projection">\n%s\n%s</style>' % (whitespace, whitespace, styles_data, whitespace)
+
+        try:
+            data = open(BUILD_DIR + "/stylesheets/print.css").read()
+            data = cssmin(data)
+            styles_data += '\n%s<style media="print">\n%s%s\n%s</style>' % (whitespace, whitespace, data, whitespace)
+        except IOError:
+            pass
+
+        try:
+            data = open(BUILD_DIR + "/stylesheets/ie.css").read()
+            data = cssmin(data)
+            styles_data += '\n%s<!--[if IE]><style media="screen, projection">\n%s%s\n%s</style><![endif]-->' % (whitespace, whitespace, data, whitespace)
+        except IOError:
+            pass
+
+
         input = input[:begin] + styles_data + input[end:]
 
     return input
