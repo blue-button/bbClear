@@ -13,31 +13,60 @@
         {% insert: styles %}
         {% insert: scripts %}
     </head>
-    <body>
+    <body ng-controller="PatientController">
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-        <div id="bio" ng-controller="PatientCtrl">
+        <div id="bio" ng-controller="PatientController">
             <h1>{{patient.demographics.firstName}} {{patient.demographics.middleName}} {{patient.demographics.lastName}}</h1>
             <p>{{patient.demographics.age}} year old {{patient.demographics.gender}}</p>
         </div>
 
-        <h2>Encounters</h2>
-        <ul ng-controller="EncounterListCtrl">
-            <li ng-repeat="encounter in encounters">
-                {{encounter.activity.name}} {{encounter.date.value}}
-            </li>
-        </ul>
-
         <h2>Allergies</h2>
-        <ul ng-controller="AllergyListCtrl">
+        <ul ng-controller="AllergyController">
             <li ng-repeat="allergy in allergies">
                 {{allergy.substance.name}}: {{allergy.status.name}}, {{allergy.severity.name}} ({{allergy.reaction.name}})
             </li>
         </ul>
 
+        <h2>Encounters</h2>
+        <ul ng-controller="EncounterController">
+            <li ng-repeat="encounter in encounters">
+                {{encounter.activity.name}} {{encounter.date.value}}
+                <ul ng-controller="VitalSignController">
+                    <li ng-repeat="vitalSign in vitalSigns|filter:{date.value: encounter.date.value}">
+                        {{vitalSign.height.value}}{{vitalSign.height.unit}},
+                        {{vitalSign.weight.value}}{{vitalSign.weight.unit}},
+                        {{vitalSign.bloodPressure.systolic.value}}/{{vitalSign.bloodPressure.diastolic.value}}
+                            {{vitalSign.bloodPressure.systolic.unit}}
+                    </li>
+                </ul>
+                <dl ng-controller="MedicationController">
+                    <li ng-repeat="medication in medications|filter:{date.value: encounter.date.value}">
+                        <dt>{{medication.product.name}}</dt>
+                        <dd>for {{medication.indication.name}}, since {{medication.date.value}}</dd>
+                    </li>
+                </dl>
+                <ul ng-controller="ImmunizationController">
+                    <li ng-repeat="immunization in immunizations|filter:{date.value: encounter.date.value}">
+                        {{immunization.product.name}} - {{immunization.date.value}}
+                    </li>
+                </ul>
+                <ul ng-controller="ProblemController">
+                    <li ng-repeat="problem in problems|filter:{date.value: encounter.date.value}">
+                        {{problem.problem.name}} ({{problem.status.name}}) - {{problem.date.value}}
+                    </li>
+                </ul>
+                <ul ng-controller="ProcedureController">
+                    <li ng-repeat="procedure in procedures|filter:{date.value: encounter.date.value}">
+                        {{procedure.procedure.name}} ({{procedure.targetSite.name}}) - {{procedure.date.value}}
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
         <h2>Medications</h2>
-        <dl ng-controller="MedicationListCtrl">
+        <dl ng-controller="MedicationController">
             <li ng-repeat="medication in medications">
                 <dt>{{medication.product.name}}</dt>
                 <dd>for {{medication.indication.name}}, since {{medication.date.value}}</dd>
@@ -45,28 +74,28 @@
         </dl>
 
         <h2>Immunizations</h2>
-        <ul ng-controller="ImmunizationListCtrl">
+        <ul ng-controller="ImmunizationController">
             <li ng-repeat="immunization in immunizations">
                 {{immunization.product.name}} - {{immunization.date.value}}
             </li>
         </ul>
 
         <h2>Problems</h2>
-        <ul ng-controller="ProblemListCtrl">
+        <ul ng-controller="ProblemController">
             <li ng-repeat="problem in problems">
                 {{problem.problem.name}} ({{problem.status.name}}) - {{problem.date.value}}
             </li>
         </ul>
 
         <h2>Procedures</h2>
-        <ul ng-controller="ProcedureListCtrl">
+        <ul ng-controller="ProcedureController">
             <li ng-repeat="procedure in procedures">
                 {{procedure.procedure.name}} ({{procedure.targetSite.name}}) - {{procedure.date.value}}
             </li>
         </ul>
 
         <h2>Vital Signs</h2>
-        <ul ng-controller="VitalSignListCtrl">
+        <ul ng-controller="VitalSignController">
             <li ng-repeat="vitalSign in vitalSigns">
                 {{vitalSign.date.value}}: {{vitalSign.height.value}}{{vitalSign.height.unit}},
                                           {{vitalSign.weight.value}}{{vitalSign.weight.unit}},
@@ -74,9 +103,6 @@
                                                 {{vitalSign.bloodPressure.systolic.unit}}
             </li>
         </ul>
-
-
-
 
         {% insert: data %}
     </body>

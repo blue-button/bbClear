@@ -238,6 +238,17 @@
             "date": {
                 "value": 20000407
             }
+        },
+        {
+            "activity": {
+                "name": "Office consultation - 15m",
+                "codeSystemName": "CPT",
+                "codeSystem": "2.16.840.1.113883.6.12",
+                "code": 99241
+            },
+            "date": {
+                "value": 19980301
+            }
         }
     ],
     "vitalSigns": [

@@ -236,7 +236,6 @@ def inject_styles(input=None):
         except IOError:
             pass
 
-
         input = input[:begin] + styles_data + input[end:]
 
     return input

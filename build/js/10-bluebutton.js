@@ -4,47 +4,49 @@
 
 var BlueButtonData;
 
-function PatientCtrl($scope){
+function PatientController($scope){
     $scope.patient = BlueButtonData.patient;
 }
 
-function EncounterListCtrl($scope){
+function EncounterController($scope){
     $scope.encounters = $.map(BlueButtonData.encounters, function(a){
         return a;
     });
+
+
 }
 
-function AllergyListCtrl($scope){
+function AllergyController($scope){
     $scope.allergies = $.map(BlueButtonData.allergies, function(a){
         return a;
     });
 }
 
-function ImmunizationListCtrl($scope){
+function ImmunizationController($scope){
     $scope.immunizations = $.map(BlueButtonData.immunizations, function(a){
         return a;
     });
 }
 
-function MedicationListCtrl($scope){
+function MedicationController($scope){
     $scope.medications = $.map(BlueButtonData.medications, function(a){
         return a;
     });
 }
 
-function ProblemListCtrl($scope){
+function ProblemController($scope){
     $scope.problems = $.map(BlueButtonData.problems, function(a){
         return a;
     });
 }
 
-function ProcedureListCtrl($scope){
+function ProcedureController($scope){
     $scope.procedures = $.map(BlueButtonData.procedures, function(a){
         return a;
     });
 }
 
-function VitalSignListCtrl($scope){
+function VitalSignController($scope){
     $scope.vitalSigns = $.map(BlueButtonData.vitalSigns, function(a){
         return a;
     });
