@@ -1,34 +1,41 @@
 [
     {
         "hash": "f7314be575aff23ee025af9aea5ca8f0",
+        "modified": "2013-01-22T21:46:56",
         "filename": "js/01-modernizr-2.6.2.min.js"
     },
     {
         "hash": "e5f0f443252cf2905f18e131fd04fc81",
+        "modified": "2013-01-22T21:50:47",
         "filename": "js/02-jquery-1.9.0.min.js"
     },
     {
-        "hash": "f4671ea99a2d35d5459afa0f86a8174c",
-        "filename": "js/03-angular.min.js"
+        "hash": "a4365e63a1dc1501c9f17dc64bbc93bb",
+        "modified": "2013-02-19T09:10:15",
+        "filename": "js/03-swig.min.js"
     },
     {
-        "hash": "65e9b1265f550322195d4f9ae93f0abb",
+        "hash": "c71dc652f919d4afb24bfeebeeb8a277",
+        "modified": "2013-02-19T19:10:40",
         "filename": "js/10-bluebutton.js"
     },
     {
         "hash": "3f499e09d570ad694fe54abcb50476be",
+        "modified": "2013-01-23T10:30:03",
         "filename": "stylesheets/normalize.css"
     },
     {
         "hash": "4583ffae7a2f26754f6b3d0f10655e8b",
+        "modified": "2013-01-23T10:03:18",
         "filename": "stylesheets/print.css"
     },
     {
         "hash": "0b592a2f03a44b060728b30a01686e3b",
+        "modified": "2013-01-23T13:17:13",
         "filename": "stylesheets/screen.css"
     },
     {
-        "hash": "54f6e098baa2e163254fe7a60c8ed54c",
+        "hash": "dd9d54638c7c78de83e3ae6624ffb7b5",
         "filename": "template.html"
     }
 ]

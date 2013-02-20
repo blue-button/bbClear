@@ -12,98 +12,153 @@
         <meta name="author" content="M. Jackson Wilkinson / jackson@jounce.net / @mjacksonw">
         {% insert: styles %}
         {% insert: scripts %}
+        <script src="https://raw.github.com/blue-button/bluebutton.js/master/build/bluebutton-latest-dev.js"></script>
     </head>
-    <body ng-controller="PatientController">
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
-        <div id="bio" ng-controller="PatientController">
-            <h1>{{patient.demographics.firstName}} {{patient.demographics.middleName}} {{patient.demographics.lastName}}</h1>
-            <p>{{patient.demographics.age}} year old {{patient.demographics.gender}}</p>
-        </div>
-
-        <h2>Allergies</h2>
-        <ul ng-controller="AllergyController">
-            <li ng-repeat="allergy in allergies">
-                {{allergy.substance.name}}: {{allergy.status.name}}, {{allergy.severity.name}} ({{allergy.reaction.name}})
-            </li>
-        </ul>
-
-        <h2>Encounters</h2>
-        <ul ng-controller="EncounterController">
-            <li ng-repeat="encounter in encounters">
-                {{encounter.activity.name}} {{encounter.date.value}}
-                <ul ng-controller="VitalSignController">
-                    <li ng-repeat="vitalSign in vitalSigns|filter:{date.value: encounter.date.value}">
-                        {{vitalSign.height.value}}{{vitalSign.height.unit}},
-                        {{vitalSign.weight.value}}{{vitalSign.weight.unit}},
-                        {{vitalSign.bloodPressure.systolic.value}}/{{vitalSign.bloodPressure.diastolic.value}}
-                            {{vitalSign.bloodPressure.systolic.unit}}
-                    </li>
+    <body>
+        <section class="bb-template">
+            <!--[if lt IE 7]>
+                <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+            <![endif]-->
+            <nav id="primaryNav">
+                <h1>{{demographics.name|full_name}}</h1>
+                <ul>
+                    <li>Profile</li>
+                    <li>Allergies</li>
+                    <li>Medications</li>
+                    <li>History</li>
+                    <li>Labs</li>
                 </ul>
-                <dl ng-controller="MedicationController">
-                    <li ng-repeat="medication in medications|filter:{date.value: encounter.date.value}">
-                        <dt>{{medication.product.name}}</dt>
-                        <dd>for {{medication.indication.name}}, since {{medication.date.value}}</dd>
+            </nav>
+            <div id="demographics" class="panel">
+                <span class="general">
+                    {{demographics.name|display_name}} is a 52 year old {{demographics.race}}
+                    {{demographics.gender}} who is {{demographics.religion}} and speaks English.
+                </span>
+                <span class="allergies">
+                    {{demographics.gender|gender_pronoun|title}} has {{allergies|max_severity}} allergies.
+                </span>
+                <span class="yearReview">
+                    In the past year, {{demographics.gender|gender_pronoun}}
+                    <span id="yearReviewEncounters">
+                        {% if encounters|length === 0 %}
+                            did not have medical encounters
+                        {% else %}
+                            had medical encounters
+                        {% endif %}
+                    </span> and has <span id="yearReviewMedications">
+                        {% if medications|length === 0 %}
+                            not had any medications prescribed.
+                        {% else %}
+                            been prescribed medications.
+                        {% endif %}
+                    </span>
+                </span>
+                <dl id="demographicsExtras">
+                    <li>
+                        <dt>Birthday</dt>
+                        <dd>{{demographics.dob}}</dd>
                     </li>
+                    <li>
+                        <dt>Address</dt>
+                        {% for line in demographics.address.street %}
+                        <dd>{{line}}</dd>
+                        {% endfor %}
+                        <dd>{{demographics.address.city}}, {{demographics.address.state}} {{demographics.address.zip}}</dd>
+                    </li>
+                    <li>
+                        <dt>Telephone</dt>
+                        {% for number in demographics.phone %}
+                            <dd class="phone-{{loop.key}}">{{loop.key|slice(0,1)}}: {{number}}</dd>
+                        {% else %}
+                            <dd>No known number</dd>
+                        {% endfor %}
+                    </li>
+                    {% if demographics.guardian %}<li>
+                        <dt>Contact ({{demographics.guardian.relationship}})</dt>
+                        <dd>{{demographics.guardian.name|full_name}}</dd>
+                        {% for number in demographics.guardian.phone %}
+                            <dd class="phone-{{loop.key}}">{{loop.key|slice(0,1)}}: {{number}}</dd>
+                        {% else %}
+                            <dd>No known number</dd>
+                        {% endfor %}
+                    </li>{% endif %}
                 </dl>
-                <ul ng-controller="ImmunizationController">
-                    <li ng-repeat="immunization in immunizations|filter:{date.value: encounter.date.value}">
-                        {{immunization.product.name}} - {{immunization.date.value}}
+            </div>
+            <div id="allergies" class="panel">
+                <h1>Allergies</h1>
+                {% for allergy in allergies %}
+                    {% if loop.first %}<ul>{% endif %}
+                    <li class="allergy-{{allergy|max_severity">
+                        <h2>{{allergy.name}}</h2>
+                        <p>{{allergy.allergen.name}}</p>
+                        <p>{{allergy.severity}}</p>
+                        <p>Causes {{allergy.reaction.name}}</p>
                     </li>
-                </ul>
-                <ul ng-controller="ProblemController">
-                    <li ng-repeat="problem in problems|filter:{date.value: encounter.date.value}">
-                        {{problem.problem.name}} ({{problem.status.name}}) - {{problem.date.value}}
+                    {% if loop.last %}</ul>{% endif %}
+                {% else %}
+                    <p>No known allergies</p>
+                {% endfor %}
+            </div>
+            <div id="medications" class="panel">
+                <h1>Current Medications</h1>
+                {% for med in medications %}
+                    {% if loop.first %}<ul>{% endif %}
+                    <li>
+                        <header>
+                            <h2>{{med.product.name}}</h2>
+                            {% if med.directions %}<small>{{med.directions}}</small>{% endif %}
+                            {% if med.reason.name %}<small>for {{med.reason.name}}</small>{% endif %}
+                        </header>
+
+                        <dl class="footer">
+                            <li>
+                                <dt>Prescriber</dt>
+                                {% if med.prescriber.organization %}<dd>{{med.prescriber.organization}}</dd>{% endif %}
+                                {% if med.prescriber.person %}<dd>{{med.prescriber.person}}</dd>{% endif %}
+                            </li>
+                            <li>
+                                <dt>Date</dt>
+                                <dd>{{med.effective_time.low}}</dd>
+                                {% if med.effective_time.high %}<dd> - {{med.effective_time.high}}{% endif %}
+                            </li>
+                        </dl>
                     </li>
-                </ul>
-                <ul ng-controller="ProcedureController">
-                    <li ng-repeat="procedure in procedures|filter:{date.value: encounter.date.value}">
-                        {{procedure.procedure.name}} ({{procedure.targetSite.name}}) - {{procedure.date.value}}
+                    {% if loop.last %}</ul>{% endif %}
+                {% endfor %}
+            </div>
+            <div id="immunizations" class="panel">
+                <h1>Immunizations</h1>
+                {% for group in immunizations|group('product.name') %}
+                    {% if loop.first %}<ul>{% endif %}
+                    <li>
+                        <h2>{{group.grouper}}</h2>
+                        {% for item in group.list %}
+                            {% if loop.first %}<ul>{% endif %}
+                            <li>{{item.product.name}} on {{item.date}}</li>
+                            {% if loop.last %}</ul>{% endif %}
+                        {% endfor %}
                     </li>
-                </ul>
-            </li>
-        </ul>
-
-        <h2>Medications</h2>
-        <dl ng-controller="MedicationController">
-            <li ng-repeat="medication in medications">
-                <dt>{{medication.product.name}}</dt>
-                <dd>for {{medication.indication.name}}, since {{medication.date.value}}</dd>
-            </li>
-        </dl>
-
-        <h2>Immunizations</h2>
-        <ul ng-controller="ImmunizationController">
-            <li ng-repeat="immunization in immunizations">
-                {{immunization.product.name}} - {{immunization.date.value}}
-            </li>
-        </ul>
-
-        <h2>Problems</h2>
-        <ul ng-controller="ProblemController">
-            <li ng-repeat="problem in problems">
-                {{problem.problem.name}} ({{problem.status.name}}) - {{problem.date.value}}
-            </li>
-        </ul>
-
-        <h2>Procedures</h2>
-        <ul ng-controller="ProcedureController">
-            <li ng-repeat="procedure in procedures">
-                {{procedure.procedure.name}} ({{procedure.targetSite.name}}) - {{procedure.date.value}}
-            </li>
-        </ul>
-
-        <h2>Vital Signs</h2>
-        <ul ng-controller="VitalSignController">
-            <li ng-repeat="vitalSign in vitalSigns">
-                {{vitalSign.date.value}}: {{vitalSign.height.value}}{{vitalSign.height.unit}},
-                                          {{vitalSign.weight.value}}{{vitalSign.weight.unit}},
-                                          {{vitalSign.bloodPressure.systolic.value}}/{{vitalSign.bloodPressure.diastolic.value}}
-                                                {{vitalSign.bloodPressure.systolic.unit}}
-            </li>
-        </ul>
-
-        {% insert: data %}
+                    {% if loop.last %}</ul>{% endif %}
+                {% endfor %}
+            </div>
+            <div id="history" class="panel">
+                <h1>Medical History</h1>
+                {% for encounter in encounters %}
+                    {% if loop.first %}<ul>{% endif %}
+                    <li>
+                        <h2>{{encounter.date}}</h2>
+                        <dl>
+                            <li>
+                                <dt>Encounter</dt>
+                                <dd class="head">{{encounter.name}}</dd>
+                                {% if encounter.finding.name %}<dd>Finding: {{encounter.finding.name}}</dd>{% endif %}
+                            </li>
+                        </dl>
+                    </li>
+                    {% if loop.last %}</ul>{% endif %}
+                {% endfor %}
+            </div>
+        </section>
     </body>
 </html>
+{% insert: data %}

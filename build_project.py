@@ -31,6 +31,9 @@ import re
 import logging
 import argparse
 import subprocess
+import datetime
+from xml.sax.handler import ContentHandler
+from xml.sax import make_parser
 
 import contrib
 from contrib.jsmin import jsmin
@@ -79,9 +82,10 @@ def build_hashes():
                 path = os.path.join(dirname, filename)
                 useful_name = path.partition(globals()['THEME_DIR'])[2].strip("/")
                 working_file = open(path)
+                modified = datetime.datetime.fromtimestamp(os.path.getmtime(path))
                 md5_hash = md5_for_file(open(path))
                 working_file.close()
-                hashes.append({"filename": useful_name, "hash": md5_hash})
+                hashes.append({"filename": useful_name, "hash": md5_hash, "modified": modified})
 
     # Check the template file
     template_file = open(globals()['THEME_DIR'] + "/template.html")
@@ -139,8 +143,9 @@ def compare_hashes(hashes):
 def write_hashes(hashes):
     logger.debug("Writing hashes")
 
+    dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
     file_hashes = open(globals()['THEME_DIR'] + "/file-hashes.json", "w")
-    output = json.dumps(hashes, indent=4, separators=(',', ': '))
+    output = json.dumps(hashes, indent=4, separators=(',', ': '), default=dthandler)
     file_hashes.write(output)
     file_hashes.close()
 
@@ -249,15 +254,16 @@ def inject_data(input=None, placeholder=False):
 
     if not placeholder:
         try:
-            data_file = open(SCRIPT_DIR + "/data.json", "r")
-            data = data_file.read()
+            data_filename = SCRIPT_DIR + "/data.xml"
+            data = open(data_filename, "r").read()
             try:
-                data = json.loads(data)
-                data = json.dumps(data)
+                parser = make_parser()
+                parser.setContentHandler(ContentHandler())
+                parser.parse(data_filename)
             except:
-                raise DataError("Data file is not proper JSON")
+                raise DataError("Data file is not proper XML")
         except IOError:
-            logger.info("- No data file found (data.json). Using placeholder.")
+            logger.info("- No data file found (data.xml). Using placeholder.")
             placeholder = True
 
     if not input:
@@ -274,7 +280,7 @@ def inject_data(input=None, placeholder=False):
         end = tag.end()
         whitespace = tag.group(1)
         if not placeholder:
-            data = "%s<!-- Injected patient data -->\n%s<script>BlueButtonCallback(%s)</script>" % (whitespace, whitespace, data)
+            data = '%s<!-- Injected patient data -->\n%s<script id="xmlBBData" type="application/xml">%s</script>' % (whitespace, whitespace, data)
             input = input[:begin] + data + input[end:]
         else:
             logger.debug("- Writing placeholder.")
