@@ -125,7 +125,7 @@ $(function(){
     template = swig.compile($(".bb-template").html());
     renderedHtml = template({
         bb: bb,
-        demographics: bb.demographics()[0],
+        demographics: bb.demographics(),
         allergies: bb.allergies(),
         encounters: bb.encounters(),
         immunizations: bb.immunizations(),
