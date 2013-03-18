@@ -42,14 +42,31 @@ var filters = {
         return input.slice(start, end);
     },
 
+    format_phone : function(input){
+        if(input.match(/(^\+)/g)){
+            return input;
+        }else{
+            numbers = input.replace(/\D/g, '');
+            numbers = numbers.replace(/(^1)/g, '');
+            number = [numbers.substr(0,3), numbers.substr(3,3), numbers.substr(6,4)];
+            return number.join('.');
+        }
+    },
+
     full_name: function(input){
-        var name,
-            names = input.given.slice(0),
+        var name, first_given, other_given,
+            names = input.given.slice(0);
+
+        if (names instanceof Array){
             first_given = names.splice(0,1);
+            other_given = names.join(" ");
+        } else {
+            first_given = names;
+        }
 
         name = first_given;
         name = input.call_me ? name + " \"" + input.call_me + "\"" : name;
-        name = (names.length > 0) ? name + " " + names.join(" ") : name;
+        name = (other_given) ? name + " " + other_given : name;
         name = name + " " + input.family;
 
         return name;
@@ -112,7 +129,7 @@ var filters = {
 $(function(){
     bb = BlueButton($("script#xmlBBData").text());
     swig.init({
-      allowErrors: false,
+      allowErrors: true,
       autoescape: true,
       cache: true,
       encoding: 'utf8',
@@ -131,7 +148,6 @@ $(function(){
         immunizations: bb.immunizations(),
         labs: bb.labs(),
         medications: bb.medications(),
-        plan: bb.plan(),
         problems: bb.problems(),
         procedures: bb.procedures(),
         vitals: bb.vitals()

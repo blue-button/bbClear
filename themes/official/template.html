@@ -11,8 +11,11 @@
         <meta name="viewport" content="width=device-width">
         <meta name="author" content="M. Jackson Wilkinson / jackson@jounce.net / @mjacksonw">
         {% insert: styles %}
-        {% insert: scripts %}
-        <script src="https://raw.github.com/blue-button/bluebutton.js/master/build/bluebutton-latest-dev.js"></script>
+        <script src="themes/official/js/01-modernizr-2.6.2.min.js"></script>
+        <script src="themes/official/js/02-jquery-1.9.0.min.js"></script>
+        <script src="themes/official/js/03-swig.min.js"></script>
+        <script src="themes/official/js/04-bluebutton.js"></script>
+        <script src="themes/official/js/10-bluebutton-theme.js"></script>
     </head>
     <body>
         <section class="bb-template">
@@ -56,7 +59,7 @@
                 <dl id="demographicsExtras">
                     <li>
                         <dt>Birthday</dt>
-                        <dd>{{demographics.dob}}</dd>
+                        <dd>{{demographics.dob|date("F j, Y")}}</dd>
                     </li>
                     <li>
                         <dt>Address</dt>
@@ -68,7 +71,7 @@
                     <li>
                         <dt>Telephone</dt>
                         {% for number in demographics.phone %}
-                            <dd class="phone-{{loop.key}}">{{loop.key|slice(0,1)}}: {{number}}</dd>
+                            {% if number %}<dd class="phone-{{loop.key}}">{{loop.key|slice(0,1)}}: <a href="{{number}}">{{number|format_phone}}</a></dd>{% endif %}
                         {% else %}
                             <dd>No known number</dd>
                         {% endfor %}
@@ -77,7 +80,7 @@
                         <dt>Contact ({{demographics.guardian.relationship}})</dt>
                         <dd>{{demographics.guardian.name|full_name}}</dd>
                         {% for number in demographics.guardian.phone %}
-                            <dd class="phone-{{loop.key}}">{{loop.key|slice(0,1)}}: {{number}}</dd>
+                            {% if number %}<dd class="phone-{{loop.key}}">{{loop.key|slice(0,1)}}: <a href="{{number}}">{{number|format_phone}}</a></dd>{% endif %}
                         {% else %}
                             <dd>No known number</dd>
                         {% endfor %}
@@ -118,8 +121,8 @@
                             </li>
                             <li>
                                 <dt>Date</dt>
-                                <dd>{{med.effective_time.low}}</dd>
-                                {% if med.effective_time.high %}<dd> - {{med.effective_time.high}}{% endif %}
+                                <dd>{{med.effective_time.low|date('M j, Y')}}</dd>
+                                {% if med.effective_time.high %}<dd> - {{med.effective_time.high|date('M j, Y')}}{% endif %}
                             </li>
                         </dl>
                     </li>
@@ -134,7 +137,7 @@
                         <h2>{{group.grouper}}</h2>
                         {% for item in group.list %}
                             {% if loop.first %}<ul>{% endif %}
-                            <li>{{item.product.name}} on {{item.date}}</li>
+                            <li>{{item.product.name}} on {{item.date|date('M j, Y')}}</li>
                             {% if loop.last %}</ul>{% endif %}
                         {% endfor %}
                     </li>
@@ -146,7 +149,7 @@
                 {% for encounter in encounters %}
                     {% if loop.first %}<ul>{% endif %}
                     <li>
-                        <h2>{{encounter.date}}</h2>
+                        <h2>{{encounter.date|date('M j, Y')}}</h2>
                         <dl>
                             <li>
                                 <dt>Encounter</dt>
