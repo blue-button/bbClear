@@ -3,6 +3,60 @@
    License: Apache */
 
 var filters = {
+    related_by_date: function(input, kind){
+        var date, batch;
+        var list = [];
+
+        if (kind == 'encounters'){
+            batch = bb.encounters();
+        }else if(kind == 'procedures'){
+            batch = bb.procedures();
+        }else if(kind == 'problems'){
+            batch = bb.problems();
+        }else if(kind == 'immunizations'){
+            batch = bb.immunizations();
+        }else if(kind == 'medications'){
+            batch = bb.medications();
+            return [];
+        }else if(kind == 'labs'){
+            batch = [];
+            for (var m in bb.labs()){
+                for (var l in bb.labs()[m].results){
+                    batch.push(bb.labs()[m].results[l]);
+                }
+            }
+        }
+
+        if (input.date){
+            if (input.date instanceof Date){
+                dates = [input.date.toDateString()];
+            }else{
+                dates = [input.date.from.toDateString(), input.date.to.toDateString()];
+            }
+            for (var k in batch){
+                if (typeof k == "number"){
+                    target = batch[k];
+                    if(target.date instanceof Date){
+                        target_date = [target.date.toDateString()];
+                    }else{
+                        target_dates = [target.date.from.toDateString, target.date.to.toDateString()];
+                    }
+                    if(filters.intersects(dates, target_dates).length > 0){
+                        list.push(target);
+                    }
+                }
+            }
+        }
+        return list;
+    },
+    intersects: function(input, comparand) {
+        return input.filter(function(n){
+            if(comparand.indexOf(n) == -1){
+                return false;
+            }
+            return true;
+        });
+    },
     group : function(list, key){
         var keys = key.split(".");
         var val, keyList = [],
@@ -53,7 +107,26 @@ var filters = {
         }
     },
 
+    format_unit : function(input){
+        if(input.match(/10\+\d\//g)){
+            base = input.split('/')[0].split('+')[0];
+            exp = input.split('/')[0].split('+')[1];
+            unit = input.split('/')[1];
+            str = base + "<sup>" + exp + "</sup>/" + unit;
+            return str;
+        }else{
+            return input;
+        }
+    },
+
     full_name: function(input){
+        if(input.given === null){
+            if(input.family === null){
+                return "Unknown";
+            }else{
+                return input.family;
+            }
+        }
         var name, first_given, other_given,
             names = input.given.slice(0);
 

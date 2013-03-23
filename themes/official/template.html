@@ -155,8 +155,49 @@
                                 <dt>Encounter</dt>
                                 <dd class="head">{{encounter.name}}</dd>
                                 {% if encounter.finding.name %}<dd>Finding: {{encounter.finding.name}}</dd>{% endif %}
+                                <ul>
+                                    {% for problem in encounter|related_by_date('problems') %}
+                                        <li>Problem: <strong>{{problem.name}}</strong></li>
+                                    {% endfor %}
+                                    {% for procedure in encounter|related_by_date('procedures') %}
+                                        <li>Procedure: <strong>{{procedure.name}}</strong></li>
+                                    {% endfor %}
+                                    {% for medication in encounter|related_by_date('medications') %}
+                                        <li>Medication: <strong>{{medication.product.name}}</strong></li>
+                                    {% endfor %}
+                                    {% for immunization in encounter|related_by_date('immunizations') %}
+                                        <li>Immunization: <strong>{{immunization.product.name}}</strong></li>
+                                    {% endfor %}
+
+                                </ul>
                             </li>
                         </dl>
+                    </li>
+                    {% if loop.last %}</ul>{% endif %}
+                {% endfor %}
+            </div>
+            <div id="labs" class="panel">
+                <h1>Labs</h1>
+                {% for lab in labs %}
+                    {% if loop.first %}<ul>{% endif %}
+                    <li>
+                        <h2>{{lab.name}}</h2>
+                        <ul>
+                            <li>
+                                <span>Component</span>
+                                <span>Value</span>
+                                <span>Low</span>
+                                <span>High</span>
+                            </li>
+                            {% for result in lab.results %}
+                                <li>
+                                    <span>{{result.name}}</span>
+                                    <span>{{result.value}} {{result.unit|format_unit|raw}}</span>
+                                    <span>{{result.reference.low}}</span>
+                                    <span>{{result.reference.high}}</span>
+                                </li>
+                            {% endfor %}
+                        </table>
                     </li>
                     {% if loop.last %}</ul>{% endif %}
                 {% endfor %}
