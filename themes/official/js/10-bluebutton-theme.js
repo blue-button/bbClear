@@ -146,7 +146,11 @@ var filters = {
     },
 
     display_name: function(input){
-        return input.call_me ? input.call_me : input.given[0];
+        if(input.given instanceof Array){
+            return input.call_me ? input.call_me : input.given[0];
+        }else{
+            return input.call_me ? input.call_me : input.given;
+        }
     },
 
     gender_pronoun: function(input, possessive, absolute){

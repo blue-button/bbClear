@@ -3,13 +3,70 @@
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
 
+@mixin has-layout {
+    *zoom: 1; }
+
+@mixin clearfix {
+  overflow: hidden;
+  @include has-layout; }
+
+
 body {
     font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+    color: #333;
 }
 
 section.bb-template {
     width: 800px;
-    margin: 50px auto;
+    margin: 0 auto;
 }
 
+div.panel {
+    padding: 50px 0;
+    border-bottom: 1px solid #ddd;
+}
 
+a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover{
+        text-decoration: underline;
+    }
+}
+
+div#demographics {
+    font-size: 26px;
+    font-weight: 300;
+
+    h1 {
+        font-size: 50px;
+        margin-bottom: 30px;
+    }
+
+    strong.severe {
+        color: #fff;
+        background: #c00;
+    }
+
+    dl {
+        @include clearfix;
+        list-style-type: none;
+        font-size: 18px;
+    }
+
+    dl li {
+        width: 25%;
+        float: left;
+    }
+
+    dt {
+        text-transform: lowercase;
+        color: #666;
+    }
+
+    dd {
+        font-weight: bold;
+        margin-left: 0;
+    }
+}

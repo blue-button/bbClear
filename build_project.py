@@ -383,4 +383,4 @@ if __name__ == '__main__':
         print ">>> Monitoring for changes to project files. Press Ctrl-C to stop."
         while True:
             build_project(theme=args.theme, watch=True)
-            time.sleep(3)
+            time.sleep(1)
