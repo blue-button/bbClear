@@ -98,11 +98,10 @@
                 <h1>Allergies</h1>
                 {% for allergy in allergies %}
                     {% if loop.first %}<ul>{% endif %}
-                    <li class="allergy-{{allergy|max_severity">
-                        <h2>{{allergy.name}}</h2>
-                        <p>{{allergy.allergen.name}}</p>
+                    <li class="allergy-{{allergy|max_severity}}">
+                        <h2>{{allergy.allergen.name}}</h2>
                         <p>{{allergy.severity}}</p>
-                        <p>Causes {{allergy.reaction.name}}</p>
+                        <p>Causes {{allergy.reaction.name|lower}}</p>
                     </li>
                     {% if loop.last %}</ul>{% endif %}
                 {% else %}

@@ -1,19 +1,17 @@
-/* Welcome to Compass.
- * In this file you should write your main styles. (or centralize your imports)
- * Import this file using the following HTML or equivalent:
- * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+@import "compass/css3";
+@import "compass/utilities";
 
-@mixin has-layout {
-    *zoom: 1; }
+$severe: #c33;
+$warning: #e70;
+$light: #ddd;
 
-@mixin clearfix {
-  overflow: hidden;
-  @include has-layout; }
-
+$dark_text: #333;
+$soft_text: #666;
+$light_text: #f8f8f8;
 
 body {
     font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
-    color: #333;
+    color: $dark_text;
 }
 
 section.bb-template {
@@ -23,7 +21,7 @@ section.bb-template {
 
 div.panel {
     padding: 50px 0;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid $light;
 }
 
 a {
@@ -45,8 +43,8 @@ div#demographics {
     }
 
     strong.severe {
-        color: #fff;
-        background: #c00;
+        color: $light_text;
+        background: $severe;
     }
 
     dl {
@@ -62,11 +60,56 @@ div#demographics {
 
     dt {
         text-transform: lowercase;
-        color: #666;
+        color: $soft_text;
     }
 
     dd {
         font-weight: bold;
         margin-left: 0;
+    }
+}
+
+div#allergies {
+    h1 {
+        margin-bottom: 30px;
+    }
+
+    ul {
+        @include clearfix;
+        list-style-type: none;
+        margin: 0; padding: 0;
+    }
+
+    li {
+        float: left;
+        margin: 0; padding: 0;
+        width: 380px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        background: $light;
+        @include box-sizing(border-box);
+        padding: 20px;
+
+
+        &.allergy-severe {
+            background: $severe;
+            color: $light_text;
+        }
+
+        &.allergy-moderate {
+            background: $warning;
+            color: $light_text;
+        }
+
+        h2, p {
+            margin-top: 0;
+            margin-bottom: 2px;
+            font-size: 18px;
+        }
+
+        p {
+            font-weight: 300;
+            font-size: 18px;
+        }
     }
 }

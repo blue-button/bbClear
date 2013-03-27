@@ -1,69 +1,113 @@
-/* Welcome to Compass.
- * In this file you should write your main styles. (or centralize your imports)
- * Import this file using the following HTML or equivalent:
- * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
-/* line 14, ../sass/screen.scss */
+/* line 12, ../sass/screen.scss */
 body {
   font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
-  color: #333;
+  color: #333333;
 }
 
-/* line 19, ../sass/screen.scss */
+/* line 17, ../sass/screen.scss */
 section.bb-template {
   width: 800px;
   margin: 0 auto;
 }
 
-/* line 24, ../sass/screen.scss */
+/* line 22, ../sass/screen.scss */
 div.panel {
   padding: 50px 0;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dddddd;
 }
 
-/* line 29, ../sass/screen.scss */
+/* line 27, ../sass/screen.scss */
 a {
   color: inherit;
   text-decoration: none;
 }
-/* line 33, ../sass/screen.scss */
+/* line 31, ../sass/screen.scss */
 a:hover {
   text-decoration: underline;
 }
 
-/* line 38, ../sass/screen.scss */
+/* line 36, ../sass/screen.scss */
 div#demographics {
   font-size: 26px;
   font-weight: 300;
 }
-/* line 42, ../sass/screen.scss */
+/* line 40, ../sass/screen.scss */
 div#demographics h1 {
   font-size: 50px;
   margin-bottom: 30px;
 }
-/* line 47, ../sass/screen.scss */
+/* line 45, ../sass/screen.scss */
 div#demographics strong.severe {
-  color: #fff;
-  background: #c00;
+  color: #f8f8f8;
+  background: #cc3333;
 }
-/* line 52, ../sass/screen.scss */
+/* line 50, ../sass/screen.scss */
 div#demographics dl {
   overflow: hidden;
   *zoom: 1;
   list-style-type: none;
   font-size: 18px;
 }
-/* line 58, ../sass/screen.scss */
+/* line 56, ../sass/screen.scss */
 div#demographics dl li {
   width: 25%;
   float: left;
 }
-/* line 63, ../sass/screen.scss */
+/* line 61, ../sass/screen.scss */
 div#demographics dt {
   text-transform: lowercase;
-  color: #666;
+  color: #666666;
 }
-/* line 68, ../sass/screen.scss */
+/* line 66, ../sass/screen.scss */
 div#demographics dd {
   font-weight: bold;
   margin-left: 0;
+}
+
+/* line 73, ../sass/screen.scss */
+div#allergies h1 {
+  margin-bottom: 30px;
+}
+/* line 77, ../sass/screen.scss */
+div#allergies ul {
+  overflow: hidden;
+  *zoom: 1;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+/* line 83, ../sass/screen.scss */
+div#allergies li {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 380px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  background: #dddddd;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 20px;
+}
+/* line 94, ../sass/screen.scss */
+div#allergies li.allergy-severe {
+  background: #cc3333;
+  color: #f8f8f8;
+}
+/* line 99, ../sass/screen.scss */
+div#allergies li.allergy-moderate {
+  background: #ee7700;
+  color: #f8f8f8;
+}
+/* line 104, ../sass/screen.scss */
+div#allergies li h2, div#allergies li p {
+  margin-top: 0;
+  margin-bottom: 2px;
+  font-size: 18px;
+}
+/* line 110, ../sass/screen.scss */
+div#allergies li p {
+  font-weight: 300;
+  font-size: 18px;
 }
