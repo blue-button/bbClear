@@ -2,3 +2,13 @@
  * In this file you should write your main styles. (or centralize your imports)
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+/* line 6, ../sass/screen.scss */
+body {
+  font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+}
+
+/* line 10, ../sass/screen.scss */
+section.bb-template {
+  width: 800px;
+  margin: 50px auto;
+}

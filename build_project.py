@@ -28,6 +28,7 @@ import os
 import hashlib
 import json
 import re
+import time
 import logging
 import argparse
 import subprocess
@@ -51,21 +52,30 @@ logger_handler.setLevel(logging.DEBUG)
 logger.addHandler(logger_handler)
 
 
-def build_project(theme="official"):
+def build_project(theme="official", watch=False):
     globals()['THEME_DIR'] = "%s/%s" % (THEMES_DIR, theme)
     if not globals()['WORKING']:
         globals()['WORKING'] = True
         logger.debug("Checking for changes to project files.")
         hashes = build_hashes()
-        # if compare_hashes(hashes):
-        if False:
-            logger.debug("- No changes to files")
+        if compare_timestamps():
+            if watch:
+                logger.debug("- No changes to files")
+            else:
+                logger.info("- No changes to files")
         else:
-            write_hashes(hashes)
-            output = inject_scripts()
-            output = inject_styles(output)
-            output = inject_data(output)
-            write_output(output)
+            if compare_hashes(hashes):
+                if watch:
+                    logger.debug("- No changes to files")
+                else:
+                    logger.info("- No changes to files")
+            else:
+                write_hashes(hashes)
+                output = inject_scripts()
+                output = inject_styles(output)
+                output = inject_data(output)
+                write_output(output)
+        globals()['WORKING'] = False
     else:
         logger.debug("Currently working, so skipping this build.")
 
@@ -88,19 +98,50 @@ def build_hashes():
                 hashes.append({"filename": useful_name, "hash": md5_hash, "modified": modified})
 
     # Check the template file
-    template_file = open(globals()['THEME_DIR'] + "/template.html")
-    hashes.append({"filename": 'template.html', "hash": md5_for_file(template_file)})
+    template_filename = globals()['THEME_DIR'] + "/template.html"
+    template_file = open(template_filename)
+    template_modified = datetime.datetime.fromtimestamp(os.path.getmtime(template_filename))
+    hashes.append({"filename": 'template.html', "hash": md5_for_file(template_file), 'modified': template_modified})
     template_file.close()
 
     try:
         # Check the data file
-        data_file = open(globals()['THEME_DIR'] + "/data.json")
-        hashes.append({"filename": 'data.json', "hash": md5_for_file(data_file)})
+        data_filename = globals()['THEME_DIR'] + "/data.json"
+        data_file = open(data_filename)
+        data_modified = datetime.datetime.fromtimestamp(os.path.getmtime(data_filename))
+        hashes.append({"filename": 'data.json', "hash": md5_for_file(data_file), 'modified': data_modified})
         template_file.close()
     except IOError:
         pass
 
     return hashes
+
+
+def compare_timestamps():
+    """
+    Returns True if all known files have consistent timestamps. False if not.
+    """
+    logger.debug("Comparing timestamps")
+
+    try:
+        file_hashes = open(globals()['THEME_DIR'] + "/file-hashes.json", "r")
+    except IOError:
+        return False
+
+    try:
+        stored_hashes = json.loads(file_hashes.read())
+    except ValueError:
+        return False
+
+    for h in stored_hashes:
+        filename = globals()['THEME_DIR'] + '/' + h['filename']
+        modified = str(datetime.datetime.fromtimestamp(os.path.getmtime(filename))).replace(' ', 'T')
+        if h['modified'] != modified:
+            logger.debug('Found a timestamp change. Checking more deeply. %s' % (filename))
+            return False
+
+    file_hashes.close()
+    return True
 
 
 def compare_hashes(hashes):
@@ -323,6 +364,7 @@ class DataError(Exception):
     def __str__(self):
         return repr(self.value)
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='store_true')
@@ -335,8 +377,10 @@ if __name__ == '__main__':
 
     if not args.watch:
         logger.info("Building the project using the '%s' theme..." % (args.theme))
-        build_project(theme=args.theme)
+        build_project(theme=args.theme, watch=False)
     else:
         # TODO
-        # print ">>> Monitoring for changes to project files. Press Ctrl-C to stop."
-        print "Watching is not yet implemented"
+        print ">>> Monitoring for changes to project files. Press Ctrl-C to stop."
+        while True:
+            build_project(theme=args.theme, watch=True)
+            time.sleep(3)
