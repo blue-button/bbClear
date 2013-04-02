@@ -115,7 +115,7 @@
                     <li>
                         <header>
                             <h2>{{med.product.name}}</h2>
-                            {% if med.directions %}<small>{{med.directions}}</small>{% endif %}
+                            {% if med.administration.name %}<small>{{med.administration.name|title}}</small>{% endif %}
                             {% if med.reason.name %}<small>for {{med.reason.name}}</small>{% endif %}
                         </header>
 
@@ -125,11 +125,13 @@
                                 {% if med.prescriber.organization %}<dd>{{med.prescriber.organization}}</dd>{% endif %}
                                 {% if med.prescriber.person %}<dd>{{med.prescriber.person}}</dd>{% endif %}
                             </li>
-                            <li>
+                            {% if med.effective_time.low or med.effective_time.high %}<li>
                                 <dt>Date</dt>
-                                <dd>{{med.effective_time.low|date('M j, Y')}}</dd>
-                                {% if med.effective_time.high %}<dd> - {{med.effective_time.high|date('M j, Y')}}{% endif %}
-                            </li>
+                                <dd>
+                                    {% if med.effective_time.low %}{{med.effective_time.low|date('M j, Y')}}{% endif %}
+                                    {% if med.effective_time.high %}&ndash; {{med.effective_time.high|date('M j, Y')}}{% endif %}
+                                </dd>
+                            </li>{% endif %}
                         </dl>
                     </li>
                     {% if loop.last %}</ul>{% endif %}
@@ -142,8 +144,8 @@
                     <li>
                         <h2>{{group.grouper}}</h2>
                         {% for item in group.list %}
-                            {% if loop.first %}<ul>{% endif %}
-                            <li>{{item.product.name}} on {{item.date|date('M j, Y')}}</li>
+                            {% if loop.first %}<ul class="pills">{% endif %}
+                            <li>{{item.date|date('M j, Y')}}</li>
                             {% if loop.last %}</ul>{% endif %}
                         {% endfor %}
                     </li>
@@ -161,46 +163,58 @@
                                 <dt>Encounter</dt>
                                 <dd class="head">{{encounter.name}}</dd>
                                 {% if encounter.finding.name %}<dd>Finding: {{encounter.finding.name}}</dd>{% endif %}
-                                <ul>
-                                    {% for problem in encounter|related_by_date('problems') %}
-                                        <li>Problem: <strong>{{problem.name}}</strong></li>
-                                    {% endfor %}
-                                    {% for procedure in encounter|related_by_date('procedures') %}
-                                        <li>Procedure: <strong>{{procedure.name}}</strong></li>
-                                    {% endfor %}
-                                    {% for medication in encounter|related_by_date('medications') %}
-                                        <li>Medication: <strong>{{medication.product.name}}</strong></li>
-                                    {% endfor %}
-                                    {% for immunization in encounter|related_by_date('immunizations') %}
-                                        <li>Immunization: <strong>{{immunization.product.name}}</strong></li>
-                                    {% endfor %}
-
-                                </ul>
                             </li>
+                            {% for problem in encounter|related_by_date('problems') %}
+                                <li>
+                                    <dt>Problem</dt>
+                                    <dd class="head">{{problem.name}}</dd>
+                                </li>
+                            {% endfor %}
+                            {% for procedure in encounter|related_by_date('procedures') %}
+                                <li>
+                                    <dt>Procedure</dt>
+                                    <dd class="head">{{procedure.name}}</dd>
+                                </li>
+                            {% endfor %}
+                            {% for medication in encounter|related_by_date('medications') %}
+                                <li>
+                                    <dt>Medication</dt>
+                                    <dd class="head">{{medication.product.name}}</dd>
+                                </li>
+                            {% endfor %}
+                            {% for immunization in encounter|related_by_date('immunizations') %}
+                                <li>
+                                    <dt>Immunization</dt>
+                                    <dd class='head'>{{immunization.product.name}}</dd>
+                                </li>
+                            {% endfor %}
                         </dl>
                     </li>
                     {% if loop.last %}</ul>{% endif %}
                 {% endfor %}
             </div>
             <div id="labs" class="panel">
-                <h1>Labs</h1>
-                {% for lab in labs %}
+                <h1>Lab Results</h1>
+                {% for panel in labs %}
                     {% if loop.first %}<ul>{% endif %}
                     <li>
-                        <h2>{{lab.name}}</h2>
-                        <ul>
-                            <li>
-                                <span>Component</span>
-                                <span>Value</span>
-                                <span>Low</span>
-                                <span>High</span>
+                        <h2>
+                            <span class="date">{{panel.results[0].date|date('M j, Y')}}</span>
+                            {{panel.name}}
+                        </h2>
+                        <ul class="results">
+                            <li class="header">
+                                <span class="lab-component">Component</span>
+                                <span class="lab-value">Value</span>
+                                <span class="lab-low">Low</span>
+                                <span class="lab-high">High</span>
                             </li>
-                            {% for result in lab.results %}
+                            {% for result in panel.results %}
                                 <li>
-                                    <span>{{result.name}}</span>
-                                    <span>{{result.value}} {{result.unit|format_unit|raw}}</span>
-                                    <span>{{result.reference.low}}</span>
-                                    <span>{{result.reference.high}}</span>
+                                    <span class="lab-component">{{result.name}}</span>
+                                    <span class="lab-value">{{result.value}} {{result.unit|format_unit|raw}}</span>
+                                    <span class="lab-low">{% if result.reference.low %}{{result.reference.low}}{% endif %}</span>
+                                    <span class="lab-high">{% if result.reference.high %}{{result.reference.high}}{% endif %}</span>
                                 </li>
                             {% endfor %}
                         </table>
@@ -209,6 +223,19 @@
                 {% endfor %}
             </div>
         </section>
+        <div id="loader">
+            <div id="warningGradientOuterBarG">
+                <div id="warningGradientFrontBarG" class="warningGradientAnimationG">
+                    <div class="warningGradientBarLineG"></div>
+                    <div class="warningGradientBarLineG"></div>
+                    <div class="warningGradientBarLineG"></div>
+                    <div class="warningGradientBarLineG"></div>
+                    <div class="warningGradientBarLineG"></div>
+                    <div class="warningGradientBarLineG"></div>
+                </div>
+            </div>
+            <p>Reticulating splines...</p>
+        </div>
     </body>
 </html>
 {% insert: data %}

@@ -203,8 +203,7 @@ var filters = {
     }
 };
 
-$(function(){
-    bb = BlueButton($("script#xmlBBData").text());
+function init_template(){
     swig.init({
       allowErrors: true,
       autoescape: true,
@@ -231,6 +230,16 @@ $(function(){
     });
 
     $(".bb-template").html(renderedHtml);
+    $("#loader").fadeOut(function(){
+        $(".bb-template").fadeIn();
+    });
+}
+
+$(function(){
+    $("#loader").fadeIn(function(){
+        bb = BlueButton($("script#xmlBBData").text());
+        init_template();
+    });
 });
 
 if(!Array.prototype.indexOf) {

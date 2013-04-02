@@ -4,10 +4,14 @@
 $severe: #c33;
 $warning: #e70;
 $light: #ddd;
+$very_light: #f8f8f8;
 
 $dark_text: #333;
 $soft_text: #666;
 $light_text: #f8f8f8;
+
+$module_width: 380px;
+$module_space: 20px;
 
 body {
     font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
@@ -17,11 +21,17 @@ body {
 section.bb-template {
     width: 800px;
     margin: 0 auto;
+    display: none;
 }
 
-div.panel {
+.panel {
     padding: 50px 0;
     border-bottom: 1px solid $light;
+
+    h1 {
+        font-size: 30px;
+        margin-bottom: 30px;
+    }
 }
 
 a {
@@ -33,13 +43,55 @@ a {
     }
 }
 
+ul.pills {
+    @include clearfix;
+    margin: 0; padding: 10px 0 0 0;
+
+    li {
+        float: left;
+        display: inline-block;
+        padding: 2px 7px;
+        margin-right: 5px;
+        background: $light;
+        @include border-radius(20px);
+        font-size: 12px;
+        border: 1px solid #ccc;
+    }
+}
+
+.listless {
+    @include clearfix;
+    list-style-type: none;
+    margin: 0; padding: 0;
+}
+
+.module {
+    float: left;
+    margin: 0 $module_space $module_space 0;
+    padding: $module_space;
+    width: 380px;
+    background: $very_light;
+    @include box-sizing(border-box);
+
+    h2, p {
+        margin-top: 0;
+        margin-bottom: 2px;
+        font-size: 18px;
+    }
+
+    p, header small {
+        font-weight: 300;
+        font-size: 18px;
+    }
+}
+
 div#demographics {
+    @extend .panel;
     font-size: 26px;
     font-weight: 300;
 
     h1 {
         font-size: 50px;
-        margin-bottom: 30px;
     }
 
     strong.severe {
@@ -70,26 +122,12 @@ div#demographics {
 }
 
 div#allergies {
-    h1 {
-        margin-bottom: 30px;
-    }
+    @extend .panel;
 
-    ul {
-        @include clearfix;
-        list-style-type: none;
-        margin: 0; padding: 0;
-    }
+    ul { @extend .listless; }
 
     li {
-        float: left;
-        margin: 0; padding: 0;
-        width: 380px;
-        margin-right: 20px;
-        margin-bottom: 20px;
-        background: $light;
-        @include box-sizing(border-box);
-        padding: 20px;
-
+        @extend .module;
 
         &.allergy-severe {
             background: $severe;
@@ -100,16 +138,230 @@ div#allergies {
             background: $warning;
             color: $light_text;
         }
+    }
+}
 
-        h2, p {
-            margin-top: 0;
-            margin-bottom: 2px;
-            font-size: 18px;
-        }
+div#medications{
+    @extend .panel;
 
-        p {
-            font-weight: 300;
-            font-size: 18px;
+    ul { @extend .listless; }
+
+    ul>li {
+        @extend .module;
+        border: 1px solid #ddd;
+
+        dl {
+            @include clearfix;
+            font-size: 14px;
+
+            li {
+                width: 50%;
+                float: left;
+            }
+
+            dt {
+                font-weight: 300;
+                color: $soft_text;
+            }
+
+            dd {
+                margin: 0;
+                font-weight: bold;
+            }
         }
     }
+}
+
+div#immunizations {
+    @extend .panel;
+
+    >ul { @extend .listless; }
+    >ul>li {
+        @extend .module;
+        border: 1px solid #ddd;
+    }
+}
+
+div#history {
+    @extend .panel;
+
+    >ul {
+        @extend .listless;
+        padding-left: 40px;
+        margin-left: 20px;
+        border-left: 1px solid $light;
+
+        >li:before {
+            content:".";
+            display: block;
+            position: absolute;
+            background: #666;
+            height: 35px;
+            width: 35px;
+            text-indent: 100%;
+            overflow: hidden;
+            margin-left: -60px;
+        }
+        >li {
+            h2 {
+                font-size: 18px;
+                font-weight: bold;
+                margin-top: 0;
+                padding: 6px 0;
+                margin-bottom: 20px;
+            }
+
+            dl>li {
+                margin-bottom: 30px;
+            }
+
+            dt {
+                color: $soft_text;
+                font-size: 20px;
+                font-weight: 300;
+                text-transform: lowercase;
+            }
+
+            dd {
+                color: $soft_text;
+                font-size: 20px;
+                margin: 0; padding: 0;
+                font-weight: 300;
+
+                &.head {
+                    font-size: 24px;
+                    color: $dark_text;
+                    font-weight: bold;
+
+                    &:before {
+                        content:".";
+                        display: block;
+                        position: absolute;
+                        background: #666;
+                        height: 15px;
+                        width: 15px;
+                        text-indent: 100%;
+                        overflow: hidden;
+                        margin-left: -48px;
+                        margin-top: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+div#labs {
+    @extend .panel;
+
+    >ul { @extend .listless; }
+
+    h2 .date {
+        float: right;
+        font-weight: 300;
+        color: $soft_text;
+    }
+
+    ul.results {
+        @extend .listless;
+        display: table;
+        width: 100%;
+        border: 1px solid $light;
+        border-right: none;
+        @include box-sizing(border-box);
+
+        li { display: table-row; }
+        li.header span {
+            background: $light;
+            font-weight: bold;
+        }
+
+        span {
+            display: table-cell;
+            padding: 20px;
+            border-right: 1px solid $light;
+            color: $soft_text;
+
+            &.lab-component {
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+div#loader {
+    display: none;
+    width: 304px;
+    margin: 100px auto;
+    text-align: center;
+    color: #ccc;
+
+    #warningGradientOuterBarG{
+        height:38px;
+        width:304px;
+        border:2px solid #eee;
+        overflow:hidden;
+        background-color:#f8f8f8;
+        @include background-image(linear-gradient(top, #f8f8f8, #eee));
+    }
+
+    .warningGradientBarLineG{
+        background-color:#f8f8f8;
+        float:left;
+        width:27px;
+        height:228px;
+        margin-right:46px;
+        margin-top:-53px;
+        @include rotate(45deg);
+    }
+
+    .warningGradientAnimationG{
+        width:448px;
+        -moz-animation-name:warningGradientAnimationG;
+        -moz-animation-duration:1.3s;
+        -moz-animation-iteration-count:infinite;
+        -moz-animation-timing-function:linear;
+        -webkit-animation-name:warningGradientAnimationG;
+        -webkit-animation-duration:1.3s;
+        -webkit-animation-iteration-count:infinite;
+        -webkit-animation-timing-function:linear;
+        -ms-animation-name:warningGradientAnimationG;
+        -ms-animation-duration:1.3s;
+        -ms-animation-iteration-count:infinite;
+        -ms-animation-timing-function:linear;
+        -o-animation-name:warningGradientAnimationG;
+        -o-animation-duration:1.3s;
+        -o-animation-iteration-count:infinite;
+        -o-animation-timing-function:linear;
+        animation-name:warningGradientAnimationG;
+        animation-duration:1.3s;
+        animation-iteration-count:infinite;
+        animation-timing-function:linear;
+    }
+
+}
+
+@-moz-keyframes warningGradientAnimationG {
+    0% { margin-left:-72px; }
+    100% { margin-left:0px; }
+}
+
+@-webkit-keyframes warningGradientAnimationG{
+    0% { margin-left:-72px; }
+    100% { margin-left:0px; }
+}
+
+@-ms-keyframes warningGradientAnimationG{
+    0% { margin-left:-72px; }
+    100% { margin-left:0px; }
+}
+
+@-o-keyframes warningGradientAnimationG{
+    0% { margin-left:-72px; }
+    100% { margin-left:0px; }
+}
+
+@keyframes warningGradientAnimationG{
+    0% { margin-left:-72px; }
+    100% { margin-left:0px; }
 }
