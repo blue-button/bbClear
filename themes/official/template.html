@@ -19,19 +19,19 @@
     </head>
     <body>
         <section class="bb-template">
-            <!--[if lt IE 7]>
-                <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-            <![endif]-->
-<!--            <nav id="primaryNav">
-                <h1>Blue Button Health Record</h1>
-                <ul>
-                    <li>Profile</li>
-                    <li>Allergies</li>
-                    <li>Medications</li>
-                    <li>History</li>
-                    <li>Labs</li>
-                </ul>
-            </nav> -->
+            <nav id="primaryNav">
+                <div class="container">
+                    <h1>Blue Button Health Record</h1>
+                    <ul>
+                        <li><a href="#demographics">Profile</a></li>
+                        <li><a href="#allergies">Allergies</a></li>
+                        <li><a href="#medications">Medications</a></li>
+                        <li><a href="#immunizations">Immunizations</a></li>
+                        <li><a href="#history">History</a></li>
+                        <li><a href="#labs">Labs</a></li>
+                    </ul>
+                </div>
+            </nav>
             <div id="demographics" class="panel">
                 <h1>{{demographics.name|full_name}}</h1>
                 <p class="narrative">
