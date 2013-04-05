@@ -231,10 +231,12 @@ function init_template(){
 
     $(".bb-template").html(renderedHtml);
     $("#loader").fadeOut(function(){
-        $(".panel").hide();
-        $("#demographics").show();
         $(".bb-template").fadeIn();
     });
+}
+
+function scrollToElement(element){
+    $('html,body').animate({scrollTop: element.offset().top},'slow');
 }
 
 $(function(){
@@ -245,9 +247,8 @@ $(function(){
 
     $(document).on('click', 'nav a', function(){
         destination = $(this).attr('href');
-        $(".panel:visible").fadeOut(function(){
-            $(destination).fadeIn();
-        });
+        scrollToElement($(destination));
+        return false;
     });
 });
 

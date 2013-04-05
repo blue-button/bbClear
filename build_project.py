@@ -277,13 +277,6 @@ def inject_styles(input=None):
         except IOError:
             pass
 
-        try:
-            data = open(globals()['THEME_DIR'] + "/stylesheets/ie.css").read()
-            data = cssmin(data)
-            styles_data += '\n%s<!--[if IE]><style media="screen, projection">\n%s%s\n%s</style><![endif]-->' % (whitespace, whitespace, data, whitespace)
-        except IOError:
-            pass
-
         input = input[:begin] + styles_data + input[end:]
 
     return input
