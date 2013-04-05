@@ -195,7 +195,7 @@ def write_hashes(hashes):
 
 def inject_scripts(input=None):
     logger.info("> Injecting scripts")
-    scripts_tag = r'([^\S\n]*){%\s?insert:\s?scripts\s?%}'
+    scripts_tag = r'([^\S\n]*){%\s?insert\s?scripts\s?%}'
     scripts = []
 
     for dirname, dirnames, filenames in os.walk(globals()['THEME_DIR'] + "/js"):
@@ -233,7 +233,7 @@ def inject_scripts(input=None):
 
 def inject_styles(input=None):
     logger.info("> Injecting styles")
-    styles_tag = r'([^\S\n]*){%\s?insert:\s?styles\s?%}'
+    styles_tag = r'([^\S\n]*){%\s?insert\s?styles\s?%}'
     stylesheets = []
 
     # Run compass to compile any SCSS
@@ -284,7 +284,7 @@ def inject_styles(input=None):
 
 def inject_data(input=None, placeholder=False):
     logger.info("> Injecting data")
-    data_tag = r'([^\S\n]*){%\s?insert:\s?data\s?%}'
+    data_tag = r'([^\S\n]*){%\s?insert\s?data\s?%}'
 
     if not placeholder:
         try:
@@ -318,7 +318,7 @@ def inject_data(input=None, placeholder=False):
             input = input[:begin] + data + input[end:]
         else:
             logger.debug("- Writing placeholder.")
-            placeholder_text = "%s<script>\n%s\t// PUT PATIENT DATA (JSON) HERE\n%s</script>" % (whitespace, whitespace, whitespace)
+            placeholder_text = '%s<script id="xmlBBData" type="application/xml">\n%s\t// PUT PATIENT DATA (JSON) HERE\n%s</script>' % (whitespace, whitespace, whitespace)
             input = input[:begin] + placeholder_text + input[end:]
 
     return input
