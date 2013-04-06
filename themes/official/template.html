@@ -6,12 +6,16 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Blue Button Health Record</title>
+        <title>Blue Button Health Record </title>
         <meta name="description" content="Patient health records in the Blue Button format.">
         <meta name="viewport" content="width=device-width">
         <meta name="author" content="M. Jackson Wilkinson / jackson@jounce.net / @mjacksonw">
         {% insert styles %}
-        {% insert scripts %}
+        <script src="themes/official/js/01-modernizr-2.6.2.min.js"></script>
+        <script src="themes/official/js/02-jquery-1.9.0.min.js"></script>
+        <script src="themes/official/js/03-swig.min.js"></script>
+        <script src="themes/official/js/04-bluebutton.js"></script>
+        <script src="themes/official/js/10-bluebutton-theme.js"></script>
     </head>
     <body>
         <section class="bb-template">
@@ -32,8 +36,9 @@
                 <h1>{{demographics.name|full_name}}</h1>
                 <p class="narrative">
                     <span class="general">
-                        <strong>{{demographics.name|display_name}}</strong> is a <strong>52</strong> year old <strong>{{demographics.race}}
-                        {{demographics.gender}}</strong> who is <strong>{{demographics.religion}}</strong> and speaks <strong>English</strong>.
+                        <strong>{{demographics.name|display_name}}</strong> is a {% if demographics.dob %}<strong>{{demographics.dob|age}}</strong> year old{% endif %}
+                        <strong>{% if demographics.race %}{{demographics.race|lower}} {% endif %}{% if demographics.marital_status %}{{demographics.marital_status|lower}} {% endif %}{{demographics.gender|lower}}</strong>
+                        {% if demographics.religion or demographics.language %}who {% if demographics.religion %}is <strong>{{demographics.religion}}</strong>{% if demographics.language %} and {% endif %}{% endif %}{% if demographics.language %}speaks <strong>English</strong>{% endif %}{% endif %}.
                     </span>
                     <span class="allergies">
                         {{demographics.gender|gender_pronoun|title}} has <strong class="{{allergies|max_severity}}">{{allergies|max_severity}} allergies</strong>.
@@ -41,13 +46,13 @@
                     <span class="yearReview">
                         In the past year, {{demographics.gender|gender_pronoun}}
                         <span id="yearReviewEncounters">
-                            {% if encounters|length === 0 %}
+                            {% if encounters|since_days(365)|strict_length == 0 %}
                                 did not have medical encounters
                             {% else %}
                                 had <strong>medical encounters</strong>
                             {% endif %}
                         </span> and has <span id="yearReviewMedications">
-                            {% if medications|length === 0 %}
+                            {% if medications|since_days(365)|strict_length == 0 %}
                                 not had any medications prescribed.
                             {% else %}
                                 been <strong>prescribed medications</strong>.
@@ -79,8 +84,8 @@
                             <dd>No known number</dd>
                         {% endfor %}
                     </li>
-                    {% if demographics.guardian %}<li>
-                        <dt>{{demographics.guardian.relationship}}</dt>
+                    {% if demographics.guardian and demographics.guardian.name.family %}<li>
+                        <dt>{{demographics.guardian.relationship|fallback("Guardian")}}</dt>
                         <dd>{{demographics.guardian.name|full_name}}</dd>
                         {% for number in demographics.guardian.phone %}
                             {% if number %}<dd class="phone-{{loop.key}}">{{loop.key|slice(0,1)}}: <a href="{{number}}">{{number|format_phone}}</a></dd>{% endif %}
@@ -96,8 +101,8 @@
                     {% if loop.first %}<ul>{% endif %}
                     <li class="allergy-{{allergy|max_severity}}">
                         <h2>{{allergy.allergen.name}}</h2>
-                        <p>{{allergy.severity}}</p>
-                        <p>Causes {{allergy.reaction.name|lower}}</p>
+                        {% if allergy.severity %}<p>{{allergy.severity}}</p>{% endif %}
+                        {% if allergy.reaction.name %}<p>Causes {{allergy.reaction.name|lower}}</p>{% endif %}
                     </li>
                     {% if loop.last %}</ul>{% endif %}
                 {% else %}
@@ -105,10 +110,10 @@
                 {% endfor %}
             </div>
             <div id="medications" class="panel">
-                <h1>Current Medications</h1>
+                <h1>Medication History</h1>
                 {% for med in medications %}
                     {% if loop.first %}<ul>{% endif %}
-                    <li>
+                    <li class="{{loop.cycle('odd', 'even')}}">
                         <header>
                             <h2>{{med.product.name}}</h2>
                             {% if med.administration.name %}<small>{{med.administration.name|title}}</small>{% endif %}
@@ -116,11 +121,11 @@
                         </header>
 
                         <dl class="footer">
-                            <li>
+                            {% if med.prescriber.organization or med.prescriber.person %}<li>
                                 <dt>Prescriber</dt>
                                 {% if med.prescriber.organization %}<dd>{{med.prescriber.organization}}</dd>{% endif %}
                                 {% if med.prescriber.person %}<dd>{{med.prescriber.person}}</dd>{% endif %}
-                            </li>
+                            </li>{% endif %}
                             {% if med.effective_time.low or med.effective_time.high %}<li>
                                 <dt>Date</dt>
                                 <dd>
@@ -131,6 +136,8 @@
                         </dl>
                     </li>
                     {% if loop.last %}</ul>{% endif %}
+                {% else %}
+                    <p>No known medications</p>
                 {% endfor %}
             </div>
             <div id="immunizations" class="panel">
@@ -146,6 +153,8 @@
                         {% endfor %}
                     </li>
                     {% if loop.last %}</ul>{% endif %}
+                {% else %}
+                    <p>No known immunizations</p>
                 {% endfor %}
             </div>
             <div id="history" class="panel">
@@ -157,7 +166,7 @@
                         <dl>
                             <li>
                                 <dt>Encounter</dt>
-                                <dd class="head">{{encounter.name}}</dd>
+                                <dd class="head">{{encounter.name|fallback("Unknown Visit")|title}}</dd>
                                 {% if encounter.finding.name %}<dd>Finding: {{encounter.finding.name}}</dd>{% endif %}
                             </li>
                             {% for problem in encounter|related_by_date('problems') %}
@@ -187,6 +196,8 @@
                         </dl>
                     </li>
                     {% if loop.last %}</ul>{% endif %}
+                {% else %}
+                    <p>No known past encounters</p>
                 {% endfor %}
             </div>
             <div id="labs" class="panel">
@@ -196,7 +207,7 @@
                     <li>
                         <h2>
                             <span class="date">{{panel.results[0].date|date('M j, Y')}}</span>
-                            {{panel.name}}
+                            {{panel.name|fallback("Laboratory Panel")}}
                         </h2>
                         <ul class="results">
                             <li class="header">
@@ -208,12 +219,12 @@
                             {% for result in panel.results %}
                                 <li>
                                     <span class="lab-component">{{result.name}}</span>
-                                    <span class="lab-value">{{result.value}} {{result.unit|format_unit|raw}}</span>
+                                    <span class="lab-value">{{result.value|fallback("Unknown")}}{% if result.unit %} {{result.unit|format_unit|raw}}{% endif %}</span>
                                     <span class="lab-low">{% if result.reference.low %}{{result.reference.low}}{% endif %}</span>
                                     <span class="lab-high">{% if result.reference.high %}{{result.reference.high}}{% endif %}</span>
                                 </li>
                             {% endfor %}
-                        </table>
+                        </ul>
                     </li>
                     {% if loop.last %}</ul>{% endif %}
                 {% endfor %}

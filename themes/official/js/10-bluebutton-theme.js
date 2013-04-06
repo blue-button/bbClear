@@ -2,7 +2,44 @@
    Copyright (c) 2013 by M. Jackson Wilkinson.
    License: Apache */
 
+function isInt(input){
+    return parseInt(input, 10) % 1 === 0;
+}
+
 var filters = {
+    since_days: function(input, days){
+        batch = [];
+        today = new Date();
+        target_date = new Date(today.setDate(today.getDate() - days));
+
+        for (var k in input){
+            if (isInt(k)){
+                if (input[k].effective_time && input[k].effective_time.low && input[k].effective_time.low > target_date){
+                    batch.push(input[k]);
+                }else if(input[k].date && input[k].date > target_date){
+                    batch.push(input[k]);
+                }
+            }
+        }
+
+        return batch;
+    },
+
+    strict_length: function(input){
+        return input.length;
+    },
+
+    fallback: function(input, output){
+        return input ? input : output;
+    },
+
+    age: function(date){
+        today = new Date();
+        ms = today - date;
+        years = ms / (1000*60*60*24*365);
+        return Math.floor(years);
+    },
+
     related_by_date: function(input, kind){
         var date, batch;
         var list = [];
@@ -71,7 +108,6 @@ var filters = {
                 keyList.push(val);
             }
         }
-
         for (var j in keyList){
             item = {
                 grouper: keyList[j],
@@ -108,18 +144,26 @@ var filters = {
     },
 
     format_unit : function(input){
-        if(input.match(/10\+\d\//g)){
-            base = input.split('/')[0].split('+')[0];
-            exp = input.split('/')[0].split('+')[1];
-            unit = input.split('/')[1];
-            str = base + "<sup>" + exp + "</sup>/" + unit;
-            return str;
-        }else{
-            return input;
+        if(input){
+            if(input.match(/10\+\d\//g)){
+                base = input.split('/')[0].split('+')[0];
+                exp = input.split('/')[0].split('+')[1];
+                unit = input.split('/')[1];
+                str = base + "<sup>" + exp + "</sup>/" + unit;
+                return str;
+            }else if (input == '1' || input == 1){
+                return "";
+            }else{
+                return input;
+            }
         }
+        return input;
     },
 
     full_name: function(input){
+        if(typeof input.given == 'undefined'){
+            return "John Doe";
+        }
         if(input.given === null){
             if(input.family === null){
                 return "Unknown";
@@ -167,7 +211,8 @@ var filters = {
         var i,
             mild = 0,
             moderate = 0,
-            severe = 0;
+            severe = 0,
+            exists = 0;
 
         if(input.severity){
             if (input.severity.match(/severe/i)){
@@ -176,16 +221,24 @@ var filters = {
                 moderate++;
             }else if (input.severity.match(/mild/i)){
                 mild++;
+            }else{
+                exists++;
             }
         } else {
             for (i in input){
-                if(input[i].severity){
-                    if (input[i].severity.match(/severe/i)){
-                        severe++;
-                    }else if (input[i].severity.match(/moderate/i)){
-                        moderate++;
-                    }else if (input[i].severity.match(/mild/i)){
-                        mild++;
+                if (isInt(i)){
+                    if(input[i].severity){
+                        if (input[i].severity.match(/severe/i)){
+                            severe++;
+                        }else if (input[i].severity.match(/moderate/i)){
+                            moderate++;
+                        }else if (input[i].severity.match(/mild/i)){
+                            mild++;
+                        }else{
+                            exists++;
+                        }
+                    }else{
+                        exists++;
                     }
                 }
             }
@@ -198,7 +251,8 @@ var filters = {
         }else if (mild){
             return mild > 1 ? "multiple mild" : "mild";
         }else{
-            return "no";
+            return exists === 0 ? "no" :
+                   exists > 1 ? "multiple" : "";
         }
     }
 };
@@ -241,7 +295,8 @@ function scrollToElement(element){
 
 $(function(){
     $("#loader").fadeIn(function(){
-        bb = BlueButton($("script#xmlBBData").text());
+        text = $.text($("textarea#xmlBBData"));
+        bb = BlueButton(text);
         init_template();
     });
 

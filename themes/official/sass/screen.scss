@@ -201,9 +201,13 @@ div#medications{
         @extend .module;
         border: 1px solid #ddd;
 
+        &.odd {
+            clear: left;
+        }
+
         dl {
             @include clearfix;
-            font-size: 14px;
+            font-size: 13px;
 
             li {
                 width: 50%;
