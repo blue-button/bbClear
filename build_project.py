@@ -295,7 +295,8 @@ def inject_data(input=None, placeholder=False):
                 parser.setContentHandler(ContentHandler())
                 parser.parse(data_filename)
             except:
-                raise DataError("Data file is not proper XML")
+                pass
+                # raise DataError("Data file is not proper XML")
         except IOError:
             logger.info("- No data file found (data.xml). Using placeholder.")
             placeholder = True
@@ -314,11 +315,11 @@ def inject_data(input=None, placeholder=False):
         end = tag.end()
         whitespace = tag.group(1)
         if not placeholder:
-            data = '%s<!-- Injected patient data -->\n%s<script id="xmlBBData" type="application/xml">%s</script>' % (whitespace, whitespace, data)
+            data = '%s<!-- Injected patient data -->\n%s<textarea style="display: none;" id="xmlBBData" type="application/xml">%s</textarea>' % (whitespace, whitespace, data)
             input = input[:begin] + data + input[end:]
         else:
             logger.debug("- Writing placeholder.")
-            placeholder_text = '%s<script id="xmlBBData" type="application/xml">\n%s\t// PUT PATIENT DATA (JSON) HERE\n%s</script>' % (whitespace, whitespace, whitespace)
+            placeholder_text = '%s<textarea style="display: none;" id="xmlBBData" type="application/xml">\n%s\t// PUT PATIENT DATA (JSON) HERE\n%s</textarea>' % (whitespace, whitespace, whitespace)
             input = input[:begin] + placeholder_text + input[end:]
 
     return input
@@ -372,7 +373,6 @@ if __name__ == '__main__':
         logger.info("Building the project using the '%s' theme..." % (args.theme))
         build_project(theme=args.theme, watch=False)
     else:
-        # TODO
         print ">>> Monitoring for changes to project files. Press Ctrl-C to stop."
         while True:
             build_project(theme=args.theme, watch=True)
