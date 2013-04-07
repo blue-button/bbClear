@@ -245,6 +245,7 @@ div#history {
         padding-left: 40px;
         margin-left: 20px;
         border-left: 1px solid $light;
+        z-index: 1;
 
         >li:before {
             content:".";
@@ -256,6 +257,7 @@ div#history {
             text-indent: 100%;
             overflow: hidden;
             margin-left: -60px;
+            z-index: 999;
         }
         >li {
             h2 {
@@ -299,6 +301,7 @@ div#history {
                         overflow: hidden;
                         margin-left: -48px;
                         margin-top: 10px;
+                        z-index: 999;
                     }
                 }
             }

@@ -236,8 +236,9 @@ div#history > ul {
   padding-left: 40px;
   margin-left: 20px;
   border-left: 1px solid #dddddd;
+  z-index: 1;
 }
-/* line 249, ../sass/screen.scss */
+/* line 250, ../sass/screen.scss */
 div#history > ul > li:before {
   content: ".";
   display: block;
@@ -248,8 +249,9 @@ div#history > ul > li:before {
   text-indent: 100%;
   overflow: hidden;
   margin-left: -60px;
+  z-index: 999;
 }
-/* line 261, ../sass/screen.scss */
+/* line 263, ../sass/screen.scss */
 div#history > ul > li h2 {
   font-size: 18px;
   font-weight: bold;
@@ -257,18 +259,18 @@ div#history > ul > li h2 {
   padding: 6px 0;
   margin-bottom: 20px;
 }
-/* line 269, ../sass/screen.scss */
+/* line 271, ../sass/screen.scss */
 div#history > ul > li dl > li {
   margin-bottom: 30px;
 }
-/* line 273, ../sass/screen.scss */
+/* line 275, ../sass/screen.scss */
 div#history > ul > li dt {
   color: #666666;
   font-size: 20px;
   font-weight: 300;
   text-transform: lowercase;
 }
-/* line 280, ../sass/screen.scss */
+/* line 282, ../sass/screen.scss */
 div#history > ul > li dd {
   color: #666666;
   font-size: 20px;
@@ -276,13 +278,13 @@ div#history > ul > li dd {
   padding: 0;
   font-weight: 300;
 }
-/* line 286, ../sass/screen.scss */
+/* line 288, ../sass/screen.scss */
 div#history > ul > li dd.head {
   font-size: 24px;
   color: #333333;
   font-weight: bold;
 }
-/* line 291, ../sass/screen.scss */
+/* line 293, ../sass/screen.scss */
 div#history > ul > li dd.head:before {
   content: ".";
   display: block;
@@ -294,15 +296,16 @@ div#history > ul > li dd.head:before {
   overflow: hidden;
   margin-left: -48px;
   margin-top: 10px;
+  z-index: 999;
 }
 
-/* line 314, ../sass/screen.scss */
+/* line 317, ../sass/screen.scss */
 div#labs h2 .date {
   float: right;
   font-weight: 300;
   color: #666666;
 }
-/* line 320, ../sass/screen.scss */
+/* line 323, ../sass/screen.scss */
 div#labs ul.results {
   display: table;
   width: 100%;
@@ -312,28 +315,28 @@ div#labs ul.results {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-/* line 328, ../sass/screen.scss */
+/* line 331, ../sass/screen.scss */
 div#labs ul.results li {
   display: table-row;
 }
-/* line 329, ../sass/screen.scss */
+/* line 332, ../sass/screen.scss */
 div#labs ul.results li.header span {
   background: #dddddd;
   font-weight: bold;
 }
-/* line 334, ../sass/screen.scss */
+/* line 337, ../sass/screen.scss */
 div#labs ul.results span {
   display: table-cell;
   padding: 20px;
   border-right: 1px solid #dddddd;
   color: #666666;
 }
-/* line 340, ../sass/screen.scss */
+/* line 343, ../sass/screen.scss */
 div#labs ul.results span.lab-component {
   font-weight: bold;
 }
 
-/* line 347, ../sass/screen.scss */
+/* line 350, ../sass/screen.scss */
 div#loader {
   display: none;
   width: 304px;
@@ -341,7 +344,7 @@ div#loader {
   text-align: center;
   color: #ccc;
 }
-/* line 354, ../sass/screen.scss */
+/* line 357, ../sass/screen.scss */
 div#loader #warningGradientOuterBarG {
   height: 38px;
   width: 304px;
@@ -354,7 +357,7 @@ div#loader #warningGradientOuterBarG {
   background-image: -o-linear-gradient(top, #f8f8f8, #eeeeee);
   background-image: linear-gradient(top, #f8f8f8, #eeeeee);
 }
-/* line 363, ../sass/screen.scss */
+/* line 366, ../sass/screen.scss */
 div#loader .warningGradientBarLineG {
   background-color: #f8f8f8;
   float: left;
@@ -368,7 +371,7 @@ div#loader .warningGradientBarLineG {
   -o-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-/* line 373, ../sass/screen.scss */
+/* line 376, ../sass/screen.scss */
 div#loader .warningGradientAnimationG {
   width: 448px;
   -moz-animation-name: warningGradientAnimationG;
@@ -394,60 +397,60 @@ div#loader .warningGradientAnimationG {
 }
 
 @-moz-keyframes warningGradientAnimationG {
-  /* line 400, ../sass/screen.scss */
+  /* line 403, ../sass/screen.scss */
   0% {
     margin-left: -72px;
   }
 
-  /* line 401, ../sass/screen.scss */
+  /* line 404, ../sass/screen.scss */
   100% {
     margin-left: 0px;
   }
 }
 
 @-webkit-keyframes warningGradientAnimationG {
-  /* line 405, ../sass/screen.scss */
+  /* line 408, ../sass/screen.scss */
   0% {
     margin-left: -72px;
   }
 
-  /* line 406, ../sass/screen.scss */
+  /* line 409, ../sass/screen.scss */
   100% {
     margin-left: 0px;
   }
 }
 
 @-ms-keyframes warningGradientAnimationG {
-  /* line 410, ../sass/screen.scss */
+  /* line 413, ../sass/screen.scss */
   0% {
     margin-left: -72px;
   }
 
-  /* line 411, ../sass/screen.scss */
+  /* line 414, ../sass/screen.scss */
   100% {
     margin-left: 0px;
   }
 }
 
 @-o-keyframes warningGradientAnimationG {
-  /* line 415, ../sass/screen.scss */
+  /* line 418, ../sass/screen.scss */
   0% {
     margin-left: -72px;
   }
 
-  /* line 416, ../sass/screen.scss */
+  /* line 419, ../sass/screen.scss */
   100% {
     margin-left: 0px;
   }
 }
 
 @keyframes warningGradientAnimationG {
-  /* line 420, ../sass/screen.scss */
+  /* line 423, ../sass/screen.scss */
   0% {
     margin-left: -72px;
   }
 
-  /* line 421, ../sass/screen.scss */
+  /* line 424, ../sass/screen.scss */
   100% {
     margin-left: 0px;
   }

@@ -88,7 +88,7 @@ var filters = {
     },
     intersects: function(input, comparand) {
         return input.filter(function(n){
-            if(comparand.indexOf(n) == -1){
+            if($.inArray(n, comparand) == -1){
                 return false;
             }
             return true;
@@ -104,11 +104,13 @@ var filters = {
             for (var k in keys){
                 val = val[keys[k]];
             }
-            if (keyList.indexOf(val) < 0){
+
+            if ($.inArray(val, keyList) < 0){
                 keyList.push(val);
             }
         }
         for (var j in keyList){
+            var item = {};
             item = {
                 grouper: keyList[j],
                 list: []
@@ -307,13 +309,13 @@ $(function(){
     });
 });
 
-if(!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function(needle) {
-        for(var i = 0; i < this.length; i++) {
-            if(this[i] === needle) {
-                return i;
-            }
-        }
-        return -1;
-    };
-}
+// if(!Array.prototype.indexOf) {
+//     Array.prototype.indexOf = function(needle) {
+//         for(var i = 0; i < this.length; i++) {
+//             if(this[i] === needle) {
+//                 return i;
+//             }
+//         }
+//         return -1;
+//     };
+// }
