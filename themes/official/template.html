@@ -37,8 +37,8 @@
                 <p class="narrative">
                     <span class="general">
                         <strong>{{demographics.name|display_name}}</strong> is a {% if demographics.dob %}<strong>{{demographics.dob|age}}</strong> year old{% endif %}
-                        <strong>{% if demographics.race %}{{demographics.race|lower}} {% endif %}{% if demographics.marital_status %}{{demographics.marital_status|lower}} {% endif %}{{demographics.gender|lower}}</strong>
-                        {% if demographics.religion or demographics.language %}who {% if demographics.religion %}is <strong>{{demographics.religion}}</strong>{% if demographics.language %} and {% endif %}{% endif %}{% if demographics.language %}speaks <strong>English</strong>{% endif %}{% endif %}.
+                        <strong>{% if demographics.race %}{{demographics.race}} {% endif %}{% if demographics.marital_status %}{{demographics.marital_status|lower}} {% endif %}{{demographics.gender|lower}}</strong>
+                        {% if demographics.religion or demographics.language %}who {% if demographics.religion %}is <strong>{{demographics.religion}}</strong>{% if demographics.language %} and {% endif %}{% endif %}{% if demographics.language %}speaks <strong>{{demographics.language|isolanguage|title}}</strong>{% endif %}{% endif %}.
                     </span>
                     <span class="allergies">
                         {{demographics.gender|gender_pronoun|title}} has <strong class="{{allergies|max_severity}}">{{allergies|max_severity}} allergies</strong>.
@@ -126,11 +126,11 @@
                                 {% if med.prescriber.organization %}<dd>{{med.prescriber.organization}}</dd>{% endif %}
                                 {% if med.prescriber.person %}<dd>{{med.prescriber.person}}</dd>{% endif %}
                             </li>{% endif %}
-                            {% if med.effective_time.low or med.effective_time.high %}<li>
+                            {% if med.date_range.start or med.date_range.end %}<li>
                                 <dt>Date</dt>
                                 <dd>
-                                    {% if med.effective_time.low %}{{med.effective_time.low|date('M j, Y')}}{% endif %}
-                                    {% if med.effective_time.high %}&ndash; {{med.effective_time.high|date('M j, Y')}}{% endif %}
+                                    {% if med.date_range.start %}{{med.date_range.start|date('M j, Y')}}{% endif %}
+                                    {% if med.date_range.end %}&ndash; {{med.date_range.end|date('M j, Y')}}{% endif %}
                                 </dd>
                             </li>{% endif %}
                         </dl>
