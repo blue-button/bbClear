@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="css/screen.css">
+
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <header>
+            <div class="container"><div class="row">
+                <ul class="span5 offset7">
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#build">Build Tool</a></li>
+                    <li><a href="#templates">Templates</a></li>
+                    <li class="last"><a href="#contributing">Contributing</a></li>
+                </ul>
+            </div></div>
+        </header>
+        <section id="hero"><div class="bghook">
+            <div class="container">
+                <h1>bb<span>Clear</span></h1>
+                <p>a Presentation Framework<br/>for Health Records</p>
+            </div>
+        </div></section>
+        <section id="pitch">
+            <div class="container"><div class="row">
+                <p class="span8"><strong>bbClear</strong> is an open-source framework for rendering more usable health records. It enables developers of electronic health record systems to output a printed health record that is more helpful for patients, their families, and caregivers.</p>
+                <div id="try" class="span4">
+                    <h2>See it in Action</h2>
+                    <a href="./bluebutton.html" class="btn"><small>View the</small><big>Sample Record</big></a>
+                    <a href="http://github.com/mjacksonw/bluebutton/" class="btn"><small>Download the</small><big>Source Code</big></a>
+                </div>
+            </div></div>
+        </section>
+        <section id="content">
+            <div class="container">
+                <div id="overview" class="row chapter">
+                    <h1 class="span12">Overview</h1>
+                    <p class="span10 offset2">
+                        bbClear was created as a result of a community-driven effort that stemmed from the Health Design Challenge. The Department of Veterans Affairs and California HealthCare Foundation contributed engineering resources to the development of the framework.
+                    </p>
+                    <ul id="overview-components" class="frame span12">
+                        <li id="overview-components-record">Patient Record in CCD/XML format</li>
+                        <li id="overview-components-bbjs">bluebutton.js conversion library</li>
+                        <li id="overview-components-libraries">Assorted JS libraries like jQuery</li>
+                        <li id="overview-components-js">Functional logic using JavaScript</li>
+                        <li id="overview-components-css">Styles using CSS and/or SASS</li>
+                        <li id="overview-components-template">Markup template using swig.js</li>
+                        <div class="caption">The contents of a bbClear health record HTML file</div>
+                    </ul>
+                    <p class="span10 offset2">bbClear produces a patient-consumable version of a health record in the form of a monolithic HTML file, including inline scripts, styles, and a simple but powerful templating framework. By including the content of industry-standard XML documents like the CCD in the source of the HTML document, you can structure and style the record data more easily than ever.</p>
+                    <p class="span10 offset2">While you can include almost any front-end web technology in a bbClear document, there are some core components in play:</p>
+                    <p class="pullnote span2">In addition to these, the default bbClear theme includes familiar libraries like Modernizr and jQuery.</p>
+                    <ul class="span10">
+                        <li><strong>The Build Tool</strong> &mdash; This is a relatively simple Python script that collects the assets for use in the final document, processes them, and compiles them into the monolithic HTML file.</li>
+                        <li><strong><a href="http://github.com/bluebutton/bluebutton.js/">Bluebutton.js</a></strong> &mdash; a library developed by <a href="http://blacktm.com">Tom Black</a> and the bbClear team, which ingests health record documents (especially CCD) and produces a friendly Javascript API.</li>
+                        <li><strong>bluebutton-theme.js</strong> &mdash; This script initializes a bbClear theme, configuring the templating system, as well as providing several useful filters and tools for working with data.</li>
+                    </ul>
+                    <p class="span10 offset2">bbClear is <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache licensed</a>, which provides very broad permission to take, adapt, and modify bbClear to your own needs. We'd love to see the community make bbClear even better.</p>
+                </div>
+                <div id="build" class="row chapter">
+                    <h1 class="span12">Build Tool &amp; Themes</h1>
+                    <h2 class="span10 offset2">Usage</h2>
+                    <p class="span10 offset2">The bbClear build tool is a Python script that collects assets and templates from themes and assembles them into the final, self-contained BlueButton HTML file. Typically, you use it from the command line:</p>
+                    <pre class="span12">
+$ python build_tool.py [-h | --help] [-v | --verbose] [-w | --watch] [-t | --theme THEME]
+</pre>
+                    <p class="span10 offset2">Where the options are as follows:</p>
+                    <dl class="span10 offset2">
+                        <dt>-h | --help</dt>
+                        <dd>Displays syntax help, describing these options.</dd>
+                        <dt>-v | --verbose</dt>
+                        <dd>Displays extra output, useful for debugging or more information.</dd>
+                        <dt>-w | --watch</dt>
+                        <dd>Watch. Continues running the build tool, watches for file changes, and rebuilds when one is found.</dd>
+                        <dt>-t | --theme [THEME]</dt>
+                        <dd>Builds a particular theme, where <code>[THEME]</code> is a directory under <code>themes/</code>.</dd>
+                    </dl>
+                    <h2 class="span10 offset2">Notes</h2>
+                    <p class="span10 offset2">The bbClear build tool currently expects a few things:</p>
+                    <ul class="span10 offset2">
+                        <li>It looks for a file in the same directory called <code>data.xml</code> to embed into the final document. If this file does not exist, it creates a placeholder for injecting XML data later.</li>
+                        <li>It looks for a <code>themes/</code> directory in the same directory as the build script. Inside, it expects to find one directory for each theme.</li>
+                        <li>Within theme directories, it expects to find a <code>js</code> directory with scripts to include, a <code>stylesheets</code> directory with CSS to include, and a <code>template.html</code> file.
+                    </ul>
+                    <p class="span10 offset2">In the future, more of these options will be configurable.</p>
+
+                </div>
+                <div id="templates" class="row chapter">
+                    <h1 class="span12">Templates</h1>
+                    <p class="span10 offset2">Template tag and filter documentation is coming soon.</p>
+                </div>
+                <div id="contributing" class="row chapter">
+                    <h1 class="span12">Contributing</h1>
+                    <p class="span10 offset2">This is just the beginning &mdash; there's far more to do, and we can use all the help we can get. If you're interested, here are a few places to start:</p>
+                    <ul class="span10 offset2">
+                        <li><strong>Report Bugs</strong> &mdash; Find something amiss? Please let us know by logging an issue over at <a href="https://github.com/mjacksonw/bbClear/issues">GitHub</a>.</li>
+                        <li><strong>Submit Patches</strong> &mdash; If you have an interesting enhancement to offer, we're happy to review pull requests via <a href="https://github.com/mjacksonw/bbClear/">GitHub</a> as well.</li>
+                        <li><strong>Build Themes</strong> &mdash; We created a very simple theme to start with, but we encourage you to take things much further. If you'd like to offer your theme to the public, consider submitting it as a pull request for inclusion in the codebase.</li>
+                        <li><strong>Make Suggestions</strong> &mdash; There's plenty more to do already, but if you have a terrific idea, don't hold back. Submit your enhancement ideas as <a href="https://github.com/mjacksonw/bbClear/issues">issues</a> on GitHub and we'll see what we can do.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <footer>
+            <div class="container"><div class="row">
+                <div id="contributors" class="span3">
+                    <h1>Core Contributors</h1>
+                    <ul>
+                        <li><a href="http://twitter.com/mjacksonw/">@mjacksonw</a></li>
+                        <li><a href="http://twitter.com/blacktm/">@blacktm</a></li>
+                        <li><a href="http://twitter.com/joshcmandel/">@joshcmandel</a></li>
+                        <li><a href="http://twitter.com/rypan/">@rypan</a></li>
+                        <li><a href="http://twitter.com/henryweimd/">@henryweimd</a></li>
+                        <li><a href="http://twitter.com/matthewmccall/">@matthewmccall</a></li>
+                    </ul>
+                </div>
+                <div id="supporters" class="span5 offset1">
+                    <h1>Supported by</h1>
+                    <p>The <a href="http://www.chcf.org/">California Healthcare Foundation</a>, based in Oakland, California; the <a href="http://www.va.gov/">Department of Veterans Affairs</a>; and the sponsors of and participants in the <a href="http://healthdesignchallenge.com/">Health Design Challenge</a>. Thank you!</p>
+                </div>
+                <div id="license" class="span2 offset1">
+                    <p>Copyright &copy; 2013<br /><a href="http://mjacksonw.com">M. Jackson Wilkinson</a>.</p>
+                    <p>Licensed to all under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License 2.0</a>.</p>
+                </div>
+            </div></div>
+        </footer>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/main.js"></script>
+        <script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+    </body>
+</html>

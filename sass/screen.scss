@@ -1,0 +1,291 @@
+@import "compass/css3";
+@import "compass/utilities";
+
+@mixin breakpoint($point) {
+  @if $point == large {
+    @media (min-width: 1210px) { @content; }
+  }
+  @else if $point == tablet {
+    @media (min-width: 768px) and (max-width: 940px) { @content; }
+  }
+  @else if $point == phablet {
+    @media (max-width: 768px) { @content; }
+  }
+  @else if $point == phone {
+    @media (max-width: 480px) { @content; }
+  }
+}
+
+$light: #eee;
+
+body {
+    font-size: 16px;
+    color: #666;
+}
+
+header {
+    @include clearfix;
+    background: $light;
+    font-size: 12px;
+    padding: 10px 0 0 0;
+
+    ul {
+        list-style-type: none;
+        margin: 0; padding: 0;
+
+        li {
+            float: left;
+            text-transform: uppercase;
+            margin-right: 25px;
+
+            &.last {
+                margin-right: 0;
+            }
+
+            a {
+                display: block;
+                padding: 20px 0;
+                border-bottom: 6px solid transparent;
+                color: #999;
+                @include box-sizing(border-box);
+
+                &:hover {
+                    border-color: #ccc;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}
+
+#hero {
+    @include background-image(linear-gradient(top, #03387A, #3E88D3));
+    height: 400px;
+    color: #fff;
+
+    .bghook {
+        height: 400px;
+        background: url(../img/hero-bg.png) center top no-repeat;
+    }
+
+    h1 {
+        width: 350px;
+        margin: 0 auto;
+        font-size: 70px;
+        line-height: 1.1em;
+        margin-top: 120px;
+        padding-left: 50px;
+
+        span {
+            font-weight: 300;
+        }
+    }
+    p {
+        padding-left: 50px;
+        font-size: 28px;
+        font-weight: 300;
+        line-height: 1.1em;
+        width: 350px;
+        margin: 0 auto;
+    }
+}
+
+#pitch {
+    background: $light;
+    padding: 30px 0;
+
+    p {
+        font-size: 20px;
+        line-height: 1.4em;
+        font-weight: 300;
+        @include box-sizing(border-box);
+        padding-right: 20px;
+    }
+
+    #try {
+        h2 {
+            font-weight: normal;
+            font-size: 14px;
+            margin: 0 0 15px 0;
+            line-height: 2.4em;
+            text-transform: uppercase;
+            color: #999;
+            border-bottom: 1px solid #ccc;
+        }
+
+        a.btn {
+            float: left;
+            width: 140px;
+            margin-right: 20px;
+            padding: 6px 10px 10px 10px;
+            @include box-sizing(border-box);
+            background: #fff;
+            text-align: left;
+            border: 1px solid #ddd;
+            border-top: 4px solid #ccc;
+            @include border-radius(5px);
+            color: #666;
+
+            &:last-of-type {
+                margin-right: 0;
+            }
+
+            small {
+                font-size: 12px;
+                display: block;
+            }
+
+            big {
+                font-size: 16px;
+                display: block;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+#content {
+    background: #fff;
+    padding: 30px 0;
+
+    h1 {
+        font-weight: 300;
+        font-size: 30px;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 30px;
+    }
+
+    h2 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .chapter {
+        padding-bottom: 30px;
+    }
+
+    p {
+        font-size: 17px;
+        line-height: 1.4em;
+    }
+
+    pre {
+        background: $light;
+        padding: 20px;
+        font-family: Monaco, fixed;
+        @include box-sizing(border-box);
+        margin-top: 15px;
+        margin-bottom: 15px;
+        border: none;
+    }
+
+    .caption {
+        clear: both;
+        display: block;
+        background: $light;
+        font-size: 12px;
+        text-align: right;
+        padding-top: 8px;
+    }
+
+    .pullnote {
+        font-size: 12px;
+        color: #999;
+        font-style: oblique;
+        @include box-sizing(border-box);
+        padding-right: 20px;
+    }
+
+    img, .frame {
+        display: block;
+        border: 10px solid $light;
+        margin: 0;
+        padding: 0;
+    }
+
+    ul {
+        line-height: 1.5em;
+        font-size: 17px;
+
+        li {
+            margin-bottom: 15px;
+        }
+
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+
+    dl {
+        dt { font-style: oblique; font-weight: normal; margin-bottom: 15px;}
+        dd { margin-bottom: 15px; margin-left: 30px;}
+    }
+
+    #overview-components {
+        @include clearfix;
+        list-style-type: none;
+        margin: 20px 0;
+        padding: 0;
+
+        li {
+            @include box-sizing(border-box);
+            height: 170px;
+            padding-top: 120px;
+            float: left;
+            width: 120px;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.5em;
+            margin-right: 30px;
+
+            @include breakpoint(large) { margin-right: 75px;}
+
+            &:first-of-type {
+                margin-left: 30px;
+            }
+            &:last-of-type{
+                margin-right: 30px;
+            }
+
+            &#overview-components-record { background: url(../img/icon-record-lg.png) center 20px no-repeat; }
+            &#overview-components-bbjs { background: url(../img/icon-tool-lg.png) center 20px no-repeat; }
+            &#overview-components-libraries { background: url(../img/icon-library-lg.png) center 20px no-repeat; }
+            &#overview-components-js { background: url(../img/icon-factory-lg.png) center 20px no-repeat; }
+            &#overview-components-css { background: url(../img/icon-palette-lg.png) center 30px no-repeat; }
+            &#overview-components-template { background: url(../img/icon-document-lg.png) center 20px no-repeat; }
+        }
+    }
+}
+
+footer {
+    @include clearfix;
+    background: $light;
+    font-size: 12px;
+    padding: 30px 0;
+
+    h1 {
+        font-weight: bold;
+        font-size: 14px;
+        margin: 0 0 10px 0;
+        line-height: 2em;
+        border-bottom: 1px solid #ccc;
+    }
+
+    #license {
+        padding: 10px 0;
+    }
+
+    #contributors {
+        font-size: 14px;
+        ul {
+            list-style-type: none;
+            margin: 0; padding: 0;
+        }
+        li {
+            float: left;
+            margin-right: 5px;
+        }
+    }
+}
