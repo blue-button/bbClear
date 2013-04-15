@@ -75,7 +75,7 @@
                     <h2 class="span10 offset2">Usage</h2>
                     <p class="span10 offset2">The bbClear build tool is a Python script that collects assets and templates from themes and assembles them into the final, self-contained BlueButton HTML file. Typically, you use it from the command line:</p>
                     <pre class="span12">
-$ python build_tool.py [-h | --help] [-v | --verbose] [-w | --watch] [-t | --theme THEME]
+$ python build.py [-h | --help] [-v | --verbose] [-w | --watch] [-t | --theme THEME]
 </pre>
                     <p class="span10 offset2">Where the options are as follows:</p>
                     <dl class="span10 offset2">
@@ -88,7 +88,7 @@ $ python build_tool.py [-h | --help] [-v | --verbose] [-w | --watch] [-t | --the
                         <dt>-w | --watch</dt>
                         <dd>Watch. Continues running the build tool, watches for file changes to assets (scripts, styles, or the template), and rebuilds when one is found. Cannot be used at the same time as <code>--force</code>.</dd>
                         <dt>-d | --data [DATA_FILE]</dt>
-                        <dd>Specifies the file to use when data is injected, found in the same folder as build_project.py. Defaults to <code>data.xml</code>. Note that data files are optional -- if one is not found, the build tool will insert a placeholder into the final document.</dd>
+                        <dd>Specifies the file to use when data is injected, found in the same folder as build.py. Defaults to <code>data.xml</code>. Note that data files are optional -- if one is not found, the build tool will insert a placeholder into the final document.</dd>
                         <dt>-t | --theme [THEME]</dt>
                         <dd>Builds a particular theme, where <code>[THEME]</code> is a directory under <code>themes/</code>. Defaults to <code>official</code>.</dd>
                     </dl>
