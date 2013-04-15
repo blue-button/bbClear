@@ -52,9 +52,14 @@ logger_handler.setLevel(logging.DEBUG)
 logger.addHandler(logger_handler)
 
 
-def build_project(theme="official", watch=False):
+def build_project(theme="official", watch=False, data_file="data.xml", force=False):
     globals()['THEME_DIR'] = "%s/%s" % (THEMES_DIR, theme)
-    if not globals()['WORKING']:
+    if force:
+        output = inject_scripts()
+        output = inject_styles(output)
+        output = inject_data(input=output, data_file=data_file)
+        write_output(output)
+    elif not globals()['WORKING']:
         globals()['WORKING'] = True
         logger.debug("Checking for changes to project files.")
         hashes = build_hashes()
@@ -73,7 +78,7 @@ def build_project(theme="official", watch=False):
                 write_hashes(hashes)
                 output = inject_scripts()
                 output = inject_styles(output)
-                output = inject_data(output)
+                output = inject_data(input=output, data_file=data_file)
                 write_output(output)
         globals()['WORKING'] = False
     else:
@@ -282,13 +287,13 @@ def inject_styles(input=None):
     return input
 
 
-def inject_data(input=None, placeholder=False):
+def inject_data(input=None, placeholder=False, data_file='data.xml'):
     logger.info("> Injecting data")
     data_tag = r'([^\S\n]*){%\s?insert\s?data\s?%}'
 
     if not placeholder:
         try:
-            data_filename = SCRIPT_DIR + "/data.xml"
+            data_filename = SCRIPT_DIR + "/%s" % (data_file)
             data = open(data_filename, "r").read()
             try:
                 parser = make_parser()
@@ -298,7 +303,7 @@ def inject_data(input=None, placeholder=False):
                 pass
                 # raise DataError("Data file is not proper XML")
         except IOError:
-            logger.info("- No data file found (data.xml). Using placeholder.")
+            logger.info("- No data file found (%s). Using placeholder." % (data_file))
             placeholder = True
 
     if not input:
@@ -364,16 +369,20 @@ if __name__ == '__main__':
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-w', '--watch', action='store_true')
     parser.add_argument('-t', '--theme', default='official')
+    parser.add_argument('-f', '--force', action='store_true')
+    parser.add_argument('-d', '--data', default='data.xml')
     args = parser.parse_args()
 
     if args.verbose:
         logger.setLevel(getattr(logging, 'DEBUG'))
 
-    if not args.watch:
+    if not args.watch or args.force:
+        if args.watch:
+            logger.info('You cannot watch and force at the same time. Forcing this time.')
         logger.info("Building the project using the '%s' theme..." % (args.theme))
-        build_project(theme=args.theme, watch=False)
+        build_project(theme=args.theme, watch=args.watch, force=args.force, data_file=args.data)
     else:
         print ">>> Monitoring for changes to project files. Press Ctrl-C to stop."
         while True:
-            build_project(theme=args.theme, watch=True)
+            build_project(theme=args.theme, watch=True, data_file=args.data)
             time.sleep(1)

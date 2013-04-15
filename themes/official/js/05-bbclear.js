@@ -77,7 +77,7 @@ var filters = {
             if (input.date instanceof Date){
                 dates = [input.date.toDateString()];
             }else{
-                dates = [input.date.from.toDateString(), input.date.to.toDateString()];
+                dates = [input.date_range.start.toDateString(), input.date_range.end.toDateString()];
             }
             for (var k in batch){
                 if (typeof k == "number"){
@@ -85,7 +85,7 @@ var filters = {
                     if(target.date instanceof Date){
                         target_date = [target.date.toDateString()];
                     }else{
-                        target_dates = [target.date.from.toDateString, target.date.to.toDateString()];
+                        target_dates = [target.date_range.start.toDateString, target.date_range.end.toDateString()];
                     }
                     if(filters.intersects(dates, target_dates).length > 0){
                         list.push(target);
