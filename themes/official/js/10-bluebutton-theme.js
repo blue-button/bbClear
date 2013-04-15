@@ -140,7 +140,7 @@ var filters = {
     },
 
     slice : function(input, start, end){
-        return input.slice(start, end);
+        return end ? input.slice(start, end) : input.slice(start);
     },
 
     format_phone : function(input){
