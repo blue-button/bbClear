@@ -147,31 +147,40 @@ header ul li a:hover {
 #content {
   background: #fff;
   padding: 30px 0;
+  line-height: 1.5em;
 }
-/* line 151, ../sass/screen.scss */
+/* line 152, ../sass/screen.scss */
 #content h1 {
   font-weight: 300;
   font-size: 30px;
   border-bottom: 1px solid #ccc;
   margin-bottom: 30px;
 }
-/* line 158, ../sass/screen.scss */
+/* line 159, ../sass/screen.scss */
 #content h2 {
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 0;
+  font-size: 24px;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 /* line 165, ../sass/screen.scss */
+#content h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+/* line 174, ../sass/screen.scss */
 #content .chapter {
   padding-bottom: 30px;
 }
-/* line 169, ../sass/screen.scss */
+/* line 178, ../sass/screen.scss */
 #content p {
-  font-size: 17px;
-  line-height: 1.4em;
+  font-size: 16px;
+  line-height: 1.5em;
 }
-/* line 174, ../sass/screen.scss */
+/* line 183, ../sass/screen.scss */
 #content pre {
   background: #eeeeee;
   padding: 20px;
@@ -183,7 +192,7 @@ header ul li a:hover {
   margin-bottom: 15px;
   border: none;
 }
-/* line 184, ../sass/screen.scss */
+/* line 193, ../sass/screen.scss */
 #content .caption {
   clear: both;
   display: block;
@@ -192,7 +201,7 @@ header ul li a:hover {
   text-align: right;
   padding-top: 8px;
 }
-/* line 193, ../sass/screen.scss */
+/* line 202, ../sass/screen.scss */
 #content .pullnote {
   font-size: 12px;
   color: #999;
@@ -202,38 +211,39 @@ header ul li a:hover {
   box-sizing: border-box;
   padding-right: 20px;
 }
-/* line 201, ../sass/screen.scss */
+/* line 210, ../sass/screen.scss */
 #content img, #content .frame {
   display: block;
   border: 10px solid #eeeeee;
   margin: 0;
   padding: 0;
 }
-/* line 208, ../sass/screen.scss */
+/* line 217, ../sass/screen.scss */
 #content ul {
   line-height: 1.5em;
-  font-size: 17px;
+  font-size: 16px;
 }
-/* line 212, ../sass/screen.scss */
+/* line 221, ../sass/screen.scss */
 #content ul li {
   margin-bottom: 15px;
+  line-height: 1.5em;
 }
-/* line 216, ../sass/screen.scss */
-#content ul:last-of-type {
+/* line 225, ../sass/screen.scss */
+#content ul li:last-of-type {
   margin-bottom: 0;
 }
-/* line 222, ../sass/screen.scss */
+/* line 233, ../sass/screen.scss */
 #content dl dt {
   font-style: oblique;
   font-weight: normal;
   margin-bottom: 15px;
 }
-/* line 223, ../sass/screen.scss */
+/* line 234, ../sass/screen.scss */
 #content dl dd {
   margin-bottom: 15px;
   margin-left: 30px;
 }
-/* line 226, ../sass/screen.scss */
+/* line 237, ../sass/screen.scss */
 #content #overview-components {
   overflow: hidden;
   *zoom: 1;
@@ -241,7 +251,7 @@ header ul li a:hover {
   margin: 20px 0;
   padding: 0;
 }
-/* line 232, ../sass/screen.scss */
+/* line 243, ../sass/screen.scss */
 #content #overview-components li {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -256,45 +266,45 @@ header ul li a:hover {
   margin-right: 30px;
 }
 @media (min-width: 1210px) {
-  /* line 232, ../sass/screen.scss */
+  /* line 243, ../sass/screen.scss */
   #content #overview-components li {
     margin-right: 75px;
   }
 }
-/* line 245, ../sass/screen.scss */
+/* line 256, ../sass/screen.scss */
 #content #overview-components li:first-of-type {
   margin-left: 30px;
 }
-/* line 248, ../sass/screen.scss */
+/* line 259, ../sass/screen.scss */
 #content #overview-components li:last-of-type {
   margin-right: 30px;
 }
-/* line 252, ../sass/screen.scss */
+/* line 263, ../sass/screen.scss */
 #content #overview-components li#overview-components-record {
   background: url(../img/icon-record-lg.png) center 20px no-repeat;
 }
-/* line 253, ../sass/screen.scss */
+/* line 264, ../sass/screen.scss */
 #content #overview-components li#overview-components-bbjs {
   background: url(../img/icon-tool-lg.png) center 20px no-repeat;
 }
-/* line 254, ../sass/screen.scss */
+/* line 265, ../sass/screen.scss */
 #content #overview-components li#overview-components-libraries {
   background: url(../img/icon-library-lg.png) center 20px no-repeat;
 }
-/* line 255, ../sass/screen.scss */
+/* line 266, ../sass/screen.scss */
 #content #overview-components li#overview-components-js {
   background: url(../img/icon-factory-lg.png) center 20px no-repeat;
 }
-/* line 256, ../sass/screen.scss */
+/* line 267, ../sass/screen.scss */
 #content #overview-components li#overview-components-css {
   background: url(../img/icon-palette-lg.png) center 30px no-repeat;
 }
-/* line 257, ../sass/screen.scss */
+/* line 268, ../sass/screen.scss */
 #content #overview-components li#overview-components-template {
   background: url(../img/icon-document-lg.png) center 20px no-repeat;
 }
 
-/* line 262, ../sass/screen.scss */
+/* line 273, ../sass/screen.scss */
 footer {
   overflow: hidden;
   *zoom: 1;
@@ -302,7 +312,7 @@ footer {
   font-size: 12px;
   padding: 30px 0;
 }
-/* line 268, ../sass/screen.scss */
+/* line 279, ../sass/screen.scss */
 footer h1 {
   font-weight: bold;
   font-size: 14px;
@@ -310,21 +320,21 @@ footer h1 {
   line-height: 2em;
   border-bottom: 1px solid #ccc;
 }
-/* line 276, ../sass/screen.scss */
+/* line 287, ../sass/screen.scss */
 footer #license {
   padding: 10px 0;
 }
-/* line 280, ../sass/screen.scss */
+/* line 291, ../sass/screen.scss */
 footer #contributors {
   font-size: 14px;
 }
-/* line 282, ../sass/screen.scss */
+/* line 293, ../sass/screen.scss */
 footer #contributors ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-/* line 286, ../sass/screen.scss */
+/* line 297, ../sass/screen.scss */
 footer #contributors li {
   float: left;
   margin-right: 5px;

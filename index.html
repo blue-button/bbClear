@@ -65,8 +65,8 @@
                     <p class="pullnote span2">In addition to these, the default bbClear theme includes familiar libraries like Modernizr and jQuery.</p>
                     <ul class="span10">
                         <li><strong>The Build Tool</strong> &mdash; This is a relatively simple Python script that collects the assets for use in the final document, processes them, and compiles them into the monolithic HTML file.</li>
-                        <li><strong><a href="http://github.com/bluebutton/bluebutton.js/">Bluebutton.js</a></strong> &mdash; a library developed by <a href="http://blacktm.com">Tom Black</a> and the bbClear team, which ingests health record documents (especially CCD) and produces a friendly Javascript API.</li>
-                        <li><strong>bluebutton-theme.js</strong> &mdash; This script initializes a bbClear theme, configuring the templating system, as well as providing several useful filters and tools for working with data.</li>
+                        <li><strong><a href="http://github.com/bluebutton/bluebutton.js/">BlueButton.js</a></strong> &mdash; a library developed by <a href="http://blacktm.com">Tom Black</a> and the bbClear team, which ingests health record documents (especially CCD) and produces a friendly Javascript API.</li>
+                        <li><strong>bbclear.js</strong> &mdash; This script initializes a bbClear theme, configuring the templating system, as well as providing several useful filters and tools for working with data.</li>
                     </ul>
                     <p class="span10 offset2">bbClear is <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache licensed</a>, which provides very broad permission to take, adapt, and modify bbClear to your own needs. We'd love to see the community make bbClear even better.</p>
                 </div>
@@ -83,10 +83,14 @@ $ python build_tool.py [-h | --help] [-v | --verbose] [-w | --watch] [-t | --the
                         <dd>Displays syntax help, describing these options.</dd>
                         <dt>-v | --verbose</dt>
                         <dd>Displays extra output, useful for debugging or more information.</dd>
+                        <dt>-f | --force</dt>
+                        <dd>Forces a build, even if no asset files have changed since the last build.</dd>
                         <dt>-w | --watch</dt>
-                        <dd>Watch. Continues running the build tool, watches for file changes, and rebuilds when one is found.</dd>
+                        <dd>Watch. Continues running the build tool, watches for file changes to assets (scripts, styles, or the template), and rebuilds when one is found. Cannot be used at the same time as <code>--force</code>.</dd>
+                        <dt>-d | --data [DATA_FILE]</dt>
+                        <dd>Specifies the file to use when data is injected, found in the same folder as build_project.py. Defaults to <code>data.xml</code>. Note that data files are optional -- if one is not found, the build tool will insert a placeholder into the final document.</dd>
                         <dt>-t | --theme [THEME]</dt>
-                        <dd>Builds a particular theme, where <code>[THEME]</code> is a directory under <code>themes/</code>.</dd>
+                        <dd>Builds a particular theme, where <code>[THEME]</code> is a directory under <code>themes/</code>. Defaults to <code>official</code>.</dd>
                     </dl>
                     <h2 class="span10 offset2">Notes</h2>
                     <p class="span10 offset2">The bbClear build tool currently expects a few things:</p>
@@ -100,7 +104,119 @@ $ python build_tool.py [-h | --help] [-v | --verbose] [-w | --watch] [-t | --the
                 </div>
                 <div id="templates" class="row chapter">
                     <h1 class="span12">Templates</h1>
-                    <p class="span10 offset2">Template tag and filter documentation is coming soon.</p>
+                    <p class="span10 offset2">The bbClear templating system uses <a href="http://paularmstrong.github.io/swig/docs/">swig.js</a> as its foundation, providing a Django-like syntax that is easy for anyone familiar with HTML to work with. bbClear supports all of swig's template tags and filters, so it's recommended that you take a look through the <a href="http://paularmstrong.github.io/swig/docs/">swig documentation</a>.</p>
+                    <p class="span10 offset2">In addition, <code>bbclear.js</code> provides additional functionality for use in your templates.</p>
+                    <div class="subchapter span10 offset2">
+                        <h2>Basics of outputting data</h2>
+                        <p><small>See also: <a href="http://paularmstrong.github.io/swig/docs/#basics">swig basics documentation</a>.</small></p>
+                        <h3>Objects from BlueButton.js</h3>
+                            <p>The bbClear templating system provides several objects via <a href="http://github.com/bluebutton/bluebutton.js/">Bluebutton.js</a> for access. Refer to that module's documentation for more information about data inside these objects:</p>
+                            <ul>
+                                <li><code>demographics</code> &mdash; Information about the patient.</li>
+                                <li><code>allergies</code> &mdash; This patient's allergies.</li>
+                                <li><code>encounters</code> &mdash; This patient's known medical encounters.</li>
+                                <li><code>immunizations</code> &mdash; This patient's known immunization record.</li>
+                                <li><code>labs</code> &mdash; Laboratory results grouped by lab panel.</li>
+                                <li><code>medications</code> &mdash; This patient's known medications, both prescription and OTC.</li>
+                                <li><code>problems</code> &mdash; This patient's current and past diagnoses.</li>
+                                <li><code>procedures</code> &mdash; Medical procedures (ie. surgeries) performed on this patient.</li>
+                                <li><code>vitals</code> &mdash; Vital signs readings for this patient.</li>
+                            </ul>
+                        <h3>Variables</h3>
+                            <p>To display a variable in a template, use double-braces:</p>
+                            <pre>
+{{demographics.name.last}}</pre>
+                            <p>If a variable is not defined, an empty string will be output.</p>
+                        <h3>Logic Tags</h3>
+                            <p>swig and bbClear provide several tags that perform logic at the template level. These are enclosed in curly-percents:</p>
+                            <pre>
+{% if demographics.name.last %}
+    {{demographics.name.last}}
+{% endif %}</pre>
+                            <p>See the documentation for other logic tags at your disposal.</p>
+                        <h3>Looping through Data</h3>
+                            <p>Much of the data coming from BlueButton.js comes in the form of arrays. You can use swig's <code>for</code> tag to loop through any lists necessary:</p>
+                            <pre>
+{% for allergy in allergies %}
+    {% if loop.first %}&lt;ul&gt;{% endif %}
+    &lt;li&gt;{{allergy.severity}}: {{allergy.allergen.name}}&lt;/li&gt;
+    {% if forloop.last %}&lt;/ul&gt;{% endif %}
+{% endfor %}</pre>
+                            <p>In the above example, <code>allergy</code> is the variable name for each item in the <code>allergies</code> array.</p>
+                    </div>
+                    <div class="subchapter span10 offset2">
+                        <h2>Template Tags</h2>
+                        <p><small>See also: <a href="http://paularmstrong.github.io/swig/docs/#tags">swig template tag documentation</a>.</small></p>
+                        <h3>insert</h3>
+                            <p>The <code>insert</code> tag is used to pull in assets, like data, scripts, and stylesheets. It can be used three ways:</p>
+                            <ul>
+                                <li><code>{% insert scripts %}</code> &mdash; pulls in scripts from the <code>themes/[theme]/js/</code> directory, minifies them, and inserts them into the final document in alphabetical order.</li>
+                                <li><code>{% insert styles %}</code> &mdash; pulls in CSS stylesheets from the <code>themes/[theme]/stylesheets/</code> directory, minifies them, and inserts them into the final document in alphabetical order.</li>
+                                <li><code>{% insert data %}</code> &mdash; looks for <code>data.xml</code> in the bbClear root directory. If found, it's inserted in place of the tag. If not, a placeholder is created for later insertion.</li>
+                    </div>  </ul>
+                    <div class="subchapter span10 offset2">
+                        <h2>Template Filters</h2>
+                            <p><small>See also: <a href="http://paularmstrong.github.io/swig/docs/#filters">swig template filter documentation</a>.</small></p>
+                            <p>Template filters may be applied to variables or to tags themselves</p>
+                        <h3>display_name</h3>
+                            <p>Takes a <code>name</code> object (eg: from <code>demographics</code>) and outputs a reasonable first name. If a preferred name is specified, this is returned. Otherwise, the first of the patient's given names is returned.</p>
+                        <h3>format_phone</h3>
+                            <p>Takes a phone number (eg: <code>demographics.phone.home</code>) and returns a predictably-formatted North American phone number in the XXX.YYY.ZZZZ format.</p>
+                        <h3>format_unit</h3>
+                            <p>Takes a unit from lab results and reformats scientific notation from <code>10+3</code> to 10<sup>3</sup>.</p>
+                        <h3>full_name</h3>
+                            <p>Takes a <code>name</code> object (eg: from <code>demographics</code>) and outputs the person's full name, including prefixes, suffixes, given and family names.</p>
+                        <h3>gender_pronoun(<em>possessive</em>, <em>absolute</em>)</h3>
+                            <p>Given a <code>gender</code> value (eg: from <code>demographics</code>), returns an appropriate pronoun. Takes up to two parameters:</p>
+                            <ul>
+                                <li><strong>possessive</strong> &mdash; returns "his," "hers," or "her."</li>
+                                <li><strong>absolute</strong> &mdash; (only if posessive) returns "her" instead of "hers".</li>
+                            </ul>
+                            <p>eg: <code>{{demographics.gender|gender_pronoun(true, true)}}</code> returns "his" or "her".</p>
+                        <h3>group(<em>key</em>)</h3>
+                            <p>Modeled after Django's <a href="https://docs.djangoproject.com/en/dev/ref/templates/builtins/#regroup">regroup tag</a>, this filter groups items in a list based on a common property. Returning a list of groups, which contains a list of objects in that group. It requires one argument:</p>
+                            <ul>
+                                <li><strong>key</strong> &mdash; the common property that should be used to group items.</li>
+                            </ul>
+                            <p>The resulting object contains a list of group objects. Each group item has a <code>grouper</code> property, which contains the value of the key shared by each of this group's items, and <code>list</code>, which contains a list of the items sharing that property value.</p>
+                            <p>For example, this snippet would group immunizations by the name of the immunization (represented by each record's <code>product.name</code>):</p>
+                            <pre>
+{% for group in immunizations|group('product.name') %}
+    {% if loop.first %}&lt;ul&gt;{% endif %}
+    &lt;li&gt;
+        &lt;h2&gt;{{group.grouper}}&lt;/h2&gt;
+        {% for item in group.list %}
+            {% if loop.first %}&lt;ul class="pills"&gt;{% endif %}
+            &lt;li&gt;{{item.date|date('M j, Y')}}&lt;/li&gt;
+            {% if loop.last %}&lt;/ul&gt;{% endif %}
+        {% endfor %}
+    &lt;/li&gt;
+    {% if loop.last %}&lt;/ul&gt;{% endif %}
+{% else %}
+    &lt;p&gt;No known immunizations&lt;/p&gt;
+{% endfor %}</pre>
+                        <h3>intersects(<em>comparand</em>)</h3>
+                            <p>Given two arrays, this filter returns values found in both.</p>
+                            <p>eg: <code>{{ list1|intersects(list2) }}</code></p>
+                        <h3>max_severity</h3>
+                            <p>Given a list of allergies, this tag returns the maximum severity found. Possible returned values:</p>
+                            <ul>
+                                <li>"severe" or "multiple severe"</li>
+                                <li>"moderate" or "multiple moderate"</li>
+                                <li>"mild" or "multiple mild"</li>
+                                <li>"no"</li>
+                            </ul>
+                            <p>Only the highest of these groups will be returned. So a patient with one severe allergy and two moderate allergies will return "severe".</p>
+                        <h3>related_by_date(<em>kind</em>)</h3>
+                            <p>Given an object with either a <code>date</code> or <code>date_range</code> attribute, this filter finds other objects of of type <code>kind</code> that share the same dates.</p>
+                            <p>This filter currently supports <code>encounters</code>, <code>procedures</code>, <code>problems</code>, <code>immunizations</code>, <code>medications</code>, and <code>labs</code> for the value of <code>kind</code>.</p>
+                        <h3>slice(<em>start</em>, <em>end</em>)</h3>
+                            <p>Provides an interface to Javascript's <code>slice</code> function, returning a subset of the filtered list. Takes two arguments:</p>
+                            <ul>
+                                <li><strong>start</strong> &mdash; An integer, the index of the first item that should be returned. The first item has an index of 0.</li>
+                                <li><strong>end</strong> &mdash; Optional, an integer, the index where the selection should end.</li>
+                            </ul>
+                    </div>
                 </div>
                 <div id="contributing" class="row chapter">
                     <h1 class="span12">Contributing</h1>

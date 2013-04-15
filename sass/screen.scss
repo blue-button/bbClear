@@ -147,6 +147,7 @@ header {
 #content {
     background: #fff;
     padding: 30px 0;
+    line-height: 1.5em;
 
     h1 {
         font-weight: 300;
@@ -156,10 +157,18 @@ header {
     }
 
     h2 {
+        font-size: 24px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    h3 {
         font-size: 18px;
         font-weight: bold;
-        margin-top: 0;
+        margin-top: 20px;
         margin-bottom: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
     }
 
     .chapter {
@@ -167,8 +176,8 @@ header {
     }
 
     p {
-        font-size: 17px;
-        line-height: 1.4em;
+        font-size: 16px;
+        line-height: 1.5em;
     }
 
     pre {
@@ -207,15 +216,17 @@ header {
 
     ul {
         line-height: 1.5em;
-        font-size: 17px;
+        font-size: 16px;
 
         li {
             margin-bottom: 15px;
+            line-height: 1.5em;
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
         }
 
-        &:last-of-type {
-            margin-bottom: 0;
-        }
     }
 
     dl {
