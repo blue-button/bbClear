@@ -21,7 +21,10 @@ $light: #eee;
 body {
     font-size: 16px;
     color: #666;
+
+    @include breakpoint(phablet) { padding: 0;}
 }
+
 
 header {
     @include clearfix;
@@ -32,6 +35,11 @@ header {
     ul {
         list-style-type: none;
         margin: 0; padding: 0;
+
+        @include breakpoint(tablet) {
+            width: 365px;
+            margin-left: 440px;
+        }
 
         li {
             float: left;
@@ -63,9 +71,13 @@ header {
     height: 400px;
     color: #fff;
 
+    @include breakpoint(phablet) { height: 300px; }
+
     .bghook {
         height: 400px;
         background: url(../img/hero-bg.png) center top no-repeat;
+
+        @include breakpoint(phablet) { height: 300px; background-size: 900px 300px; }
     }
 
     h1 {
@@ -79,6 +91,12 @@ header {
         span {
             font-weight: 300;
         }
+
+        @include breakpoint(phablet) {
+            width: 230px;
+            font-size: 40px;
+            margin-top: 100px;
+        }
     }
     p {
         padding-left: 50px;
@@ -87,12 +105,18 @@ header {
         line-height: 1.1em;
         width: 350px;
         margin: 0 auto;
+
+        @include breakpoint(phablet) {
+            width: 230px;
+            font-size: 18px;
+        }
     }
 }
 
 #pitch {
     background: $light;
     padding: 30px 0;
+    @extend .phabletPadding;
 
     p {
         font-size: 20px;
@@ -148,6 +172,7 @@ header {
     background: #fff;
     padding: 30px 0;
     line-height: 1.5em;
+    @extend .phabletPadding;
 
     h1 {
         font-weight: 300;
@@ -299,4 +324,8 @@ footer {
             margin-right: 5px;
         }
     }
+}
+
+.phabletPadding {
+    @include breakpoint(phablet) { padding: 30px 20px; }
 }
