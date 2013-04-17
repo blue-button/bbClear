@@ -324,7 +324,7 @@ def inject_data(input=None, placeholder=False, data_file='data.xml'):
             input = input[:begin] + data + input[end:]
         else:
             logger.debug("- Writing placeholder.")
-            placeholder_text = '%s<textarea style="display: none;" id="xmlBBData" type="application/xml">\n%s\t// PUT PATIENT DATA (JSON) HERE\n%s</textarea>' % (whitespace, whitespace, whitespace)
+            placeholder_text = '%s<textarea style="display: none;" id="xmlBBData" type="application/xml">\n%s\t<!-- Inject XML Data Here -->\n%s</textarea>' % (whitespace, whitespace, whitespace)
             input = input[:begin] + placeholder_text + input[end:]
 
     return input
