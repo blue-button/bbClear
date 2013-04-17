@@ -260,17 +260,17 @@ header ul li a:hover {
   padding: 0;
 }
 /* line 242, ../sass/screen.scss */
-#content ul {
+#content ul, #content ol {
   line-height: 1.5em;
   font-size: 16px;
 }
 /* line 246, ../sass/screen.scss */
-#content ul li {
+#content ul li, #content ol li {
   margin-bottom: 15px;
   line-height: 1.5em;
 }
 /* line 250, ../sass/screen.scss */
-#content ul li:last-of-type {
+#content ul li:last-of-type, #content ol li:last-of-type {
   margin-bottom: 0;
 }
 /* line 258, ../sass/screen.scss */
