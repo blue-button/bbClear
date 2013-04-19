@@ -140,9 +140,12 @@ def compare_timestamps():
 
     for h in stored_hashes:
         filename = globals()['THEME_DIR'] + '/' + h['filename']
-        modified = str(datetime.datetime.fromtimestamp(os.path.getmtime(filename))).replace(' ', 'T')
-        if h['modified'] != modified:
-            logger.debug('Found a timestamp change. Checking more deeply. %s' % (filename))
+        try:
+            modified = str(datetime.datetime.fromtimestamp(os.path.getmtime(filename))).replace(' ', 'T')
+            if h['modified'] != modified:
+                logger.debug('Found a timestamp change. Checking more deeply. %s' % (filename))
+                return False
+        except:
             return False
 
     file_hashes.close()
