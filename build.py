@@ -207,6 +207,7 @@ def inject_scripts(input=None):
     scripts = []
 
     for dirname, dirnames, filenames in os.walk(globals()['THEME_DIR'] + "/js"):
+        filenames.sort()
         for filename in filenames:
             if filename.split('.')[-1] == 'js':
                 path = os.path.join(dirname, filename)
