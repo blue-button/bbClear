@@ -13,6 +13,10 @@ bbClear comes with a default theme, aptly named 'clear,' so you're able to get m
 
 This will build a BlueButton HTML file in the same directory, named `bluebutton.html`. Fire this up in your favorite [modern] web browser, and see what it gives you.
 
+## Depdendencies
+
+bbClear itself is dependent only on [Python](http://python.org). Some themes may have additional dependencies as well. The official theme makes optional use of [Compass](http://compass-style.org/) for CSS authoring.
+
 ## Browser support
 
 Currently, bbClear tries to support commonly-used browsers down to IE8. No support is claimed for IE7 or below, or relatively-ancient versions of browsers such as Safari, Firefox, or Chrome.
