@@ -23,7 +23,7 @@ Currently, bbClear tries to support commonly-used browsers down to IE8. No suppo
 
 ## Documentation
 
-For more information and documentation, visit http://mjacksonw.github.io/bbClear/
+For more information and documentation, visit http://blue-button.github.io/bbClear/
 
 ## Copyright and Licensing
 
