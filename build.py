@@ -324,11 +324,11 @@ def inject_data(input=None, placeholder=False, data_file='data.xml'):
         end = tag.end()
         whitespace = tag.group(1)
         if not placeholder:
-            data = '%s<!-- Injected patient data -->\n%s<textarea style="display: none;" id="xmlBBData" type="application/xml">%s</textarea>' % (whitespace, whitespace, data)
+            data = '%s<!-- Injected patient data -->\n%s<script style="display: none;" id="xmlBBData" type="text/plain">%s</script>' % (whitespace, whitespace, data)
             input = input[:begin] + data + input[end:]
         else:
             logger.debug("- Writing placeholder.")
-            placeholder_text = '%s<textarea style="display: none;" id="xmlBBData" type="application/xml">\n%s\t<!-- Inject XML Data Here -->\n%s</textarea>' % (whitespace, whitespace, whitespace)
+            placeholder_text = '%s<script style="display: none;" id="xmlBBData" type="text/plain">\n%s\t<!-- Inject XML Data Here -->\n%s</script>' % (whitespace, whitespace, whitespace)
             input = input[:begin] + placeholder_text + input[end:]
 
     return input

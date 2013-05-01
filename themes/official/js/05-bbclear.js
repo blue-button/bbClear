@@ -306,7 +306,7 @@ function scrollToElement(element){
 
 $(function(){
     $("#loader").fadeIn(function(){
-        text = $.text($("textarea#xmlBBData"));
+        text = $.text($("script#xmlBBData"));
         bb = BlueButton(text);
         init_template();
     });
