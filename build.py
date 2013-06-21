@@ -33,6 +33,7 @@ import logging
 import argparse
 import subprocess
 import datetime
+import codecs
 from xml.sax.handler import ContentHandler
 from xml.sax import make_parser
 
@@ -298,7 +299,7 @@ def inject_data(input=None, placeholder=False, data_file='data.xml'):
     if not placeholder:
         try:
             data_filename = SCRIPT_DIR + "/%s" % (data_file)
-            data = open(data_filename, "r").read()
+            data = codecs.open(data_filename, encoding="utf-8", mode="r").read()
             try:
                 parser = make_parser()
                 parser.setContentHandler(ContentHandler())
@@ -335,7 +336,7 @@ def inject_data(input=None, placeholder=False, data_file='data.xml'):
 
 
 def write_output(output):
-    target_file = open(SCRIPT_DIR + "/bluebutton.html", "w")
+    target_file = codecs.open(SCRIPT_DIR + "/bluebutton.html", encoding="utf-8", mode="w")
     target_file.write(output)
     target_file.close()
 
