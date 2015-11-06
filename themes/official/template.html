@@ -33,11 +33,13 @@
                 <p class="narrative">
                     <span class="general">
                         <strong>{{demographics.name|display_name}}</strong> is a {% if demographics.dob %}<strong>{{demographics.dob|age}}</strong> year old{% endif %}
-                        <strong>{% if demographics.race %}{{demographics.race}} {% endif %}{% if demographics.marital_status %}{{demographics.marital_status|lower}} {% endif %}{{demographics.gender|lower}}</strong>
+                        <strong>{% if demographics.race %}{{demographics.race}}{% endif %}
+                            {% if demographics.marital_status %}{{demographics.marital_status|lower}} {% endif %}
+                            {{demographics.gender|lower}}{% if demographics.gender == "Other" %}/non-binary{% endif %}</strong>
                         {% if demographics.religion or demographics.language %}who {% if demographics.religion %}is <strong>{{demographics.religion}}</strong>{% if demographics.language %} and {% endif %}{% endif %}{% if demographics.language %}speaks <strong>{{demographics.language|isolanguage|title}}</strong>{% endif %}{% endif %}.
                     </span>
                     <span class="allergies">
-                        {{demographics.gender|gender_pronoun|title}} has <strong class="{{allergies|max_severity}}">{{allergies|max_severity}} allergies</strong>.
+                        {{demographics.gender|gender_pronoun|title}}  {% if demographics.gender  == "Other" %} have {{gender_pronoun}} {% else %} has {% endif %} <strong class="{{allergies|max_severity}}">{{allergies|max_severity}} allergies</strong>.
                     </span>
                     <span class="yearReview">
                         In the past year, {{demographics.gender|gender_pronoun}}
@@ -47,7 +49,8 @@
                             {% else %}
                                 had <strong>medical encounters</strong>
                             {% endif %}
-                        </span> and has <span id="yearReviewMedications">
+                        </span> and {% if demographics.gender  == "Other" %} have {{gender_pronoun}} {% else %} has {% endif %}
+<span id="yearReviewMedications">
                             {% if medications|since_days(365)|strict_length == 0 %}
                                 not had any medications prescribed.
                             {% else %}

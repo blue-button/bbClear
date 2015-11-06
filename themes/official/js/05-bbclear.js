@@ -209,8 +209,12 @@ var filters = {
     },
 
     gender_pronoun: function(input, possessive, absolute){
+        // sanitize input
+        input = input.toLowerCase();
         if(input == "female"){
             return possessive ? (absolute ? "hers" : "her") : "she";
+        }else if(input == "other"){
+            return possessive ? (absolute ? "theirs" : "their") : "they";
         }else{
             return possessive ? "his" : "he";
         }
